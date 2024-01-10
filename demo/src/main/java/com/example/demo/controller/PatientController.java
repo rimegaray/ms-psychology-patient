@@ -3,12 +3,15 @@ package com.example.demo.controller;
 import com.example.demo.repository.dto.PatientDto;
 import com.example.demo.repository.entity.PatientEntity;
 import com.example.demo.service.PatientService;
+
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Api
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/patient")
@@ -28,7 +31,7 @@ public class PatientController {
         patientEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
         patientEntity.setLifeStory(patientDto.getLifeStory());
         patientEntity.setObservations(patientDto.getObservations());
-        return patientService.addProduct(patientEntity);
+        return patientService.addPatient(patientEntity);
     }
 
     @GetMapping("/{id}")
@@ -42,16 +45,16 @@ public class PatientController {
             return null;
         }
         patientEntity.setIdPatient(id);
-        return patientService.updatePacient(id, patientEntity);
+        return patientService.updatePatient(id, patientEntity);
     }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) {
-        patientService.deletePacient(id);
+        patientService.deletePatient(id);
     }
     @GetMapping
     public List<PatientDto> getAll() {
-        List<PatientEntity> raton = patientService.getAll();
-        return raton.stream()
+        List<PatientEntity> patients = patientService.getAll();
+        return patients.stream()
                 .map(this::convertToDtoPatient)
                 .collect(Collectors.toList());
     }

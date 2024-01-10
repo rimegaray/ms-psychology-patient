@@ -16,7 +16,7 @@ public class PatientService {
 
     private final PatientDao patientDao;
 
-    public PatientDto addProduct (PatientEntity patientEntity) {
+    public PatientDto addPatient (PatientEntity patientEntity) {
         PatientEntity patientResult = patientDao.save(patientEntity);
         return convertToDtoPatient(patientResult);
     }
@@ -29,7 +29,7 @@ public class PatientService {
     public PatientEntity getPatientById(int idPatient) {
         return patientDao.findById(idPatient).orElse(null);
     }
-    public PatientEntity updatePacient(int idPatient, PatientEntity pacientUpdate) {
+    public PatientEntity updatePatient(int idPatient, PatientEntity pacientUpdate) {
         PatientEntity existingPatient = patientDao.findById(idPatient).orElse(null);
         if (existingPatient != null) {
             existingPatient.setFullName(pacientUpdate.getFullName());
@@ -46,7 +46,7 @@ public class PatientService {
         return patientDao.save(existingPatient);
     }
 
-    public void deletePacient (int idPatient) {
+    public void deletePatient (int idPatient) {
         patientDao.deleteById(idPatient);
     }
     public List<PatientEntity> getAll() {
