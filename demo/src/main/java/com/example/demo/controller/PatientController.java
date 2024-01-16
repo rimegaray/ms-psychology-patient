@@ -3,11 +3,20 @@ package com.example.demo.controller;
 import com.example.demo.repository.dto.PatientDto;
 import com.example.demo.repository.entity.PatientEntity;
 import com.example.demo.service.PatientService;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +37,7 @@ public class PatientController {
         patientEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
         patientEntity.setLifeStory(patientDto.getLifeStory());
         patientEntity.setObservations(patientDto.getObservations());
-        return patientService.addProduct(patientEntity);
+        return patientService.addPatient(patientEntity);
     }
 
     @GetMapping("/{id}")
@@ -42,11 +51,11 @@ public class PatientController {
             return null;
         }
         patientEntity.setIdPatient(id);
-        return patientService.updatePacient(id, patientEntity);
+        return patientService.updatePatient(id, patientEntity);
     }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id) {
-        patientService.deletePacient(id);
+        patientService.deletePatient(id);
     }
     @GetMapping
     public List<PatientDto> getAll() {
