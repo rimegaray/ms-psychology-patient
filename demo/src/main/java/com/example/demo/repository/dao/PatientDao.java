@@ -1,6 +1,9 @@
 package com.example.demo.repository.dao;
 
 import com.example.demo.repository.entity.PatientEntity;
+
+import lombok.Builder;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

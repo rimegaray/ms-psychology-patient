@@ -1,18 +1,17 @@
-package com.example.demo.repository.dto;
+package com.example.demo.controller.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.io.Serializable;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
-@Builder
 @Getter
 @Setter
-public class PatientDto implements Serializable{
+@AllArgsConstructor
+@NoArgsConstructor
+public class PatientListRequest {
 	private String fullName;
     private int dni;
     private int age;
@@ -24,3 +23,4 @@ public class PatientDto implements Serializable{
     private byte[] lifeStory;
     private String observations;
 }
+

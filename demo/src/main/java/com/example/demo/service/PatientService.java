@@ -16,20 +16,20 @@ public class PatientService {
 
     private final PatientDao patientDao;
 
-    public PatientDto addPatient (PatientEntity patientEntity) {
-        PatientEntity patientResult = patientDao.save(patientEntity);
-        return convertToDtoPatient(patientResult);
+    public PatientDto addPatient (PatientDto patientDto) {
+        PatientEntity patientResult = patientDao.save(convertToEntityPatient(patientDto));
+        return convertPatientEntityToDtoPatient(patientResult);
     }
-    public List<PatientDto> listPatients() {
-        List<PatientEntity> products = patientDao.findAll();
-        return products.stream()
-                .map(this::convertToDtoPatient)
+    public List<PatientDto> getAll() {
+        List<PatientEntity> patientEntities = patientDao.findAll();
+        return patientEntities.stream()
+                .map(this::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
-    public PatientEntity getPatientById(int idPatient) {
-        return patientDao.findById(idPatient).orElse(null);
+    public PatientDto getPatientById(int patientId) {
+        return convertPatientEntityToDtoPatient(patientDao.findById(patientId).orElse(null));
     }
-    public PatientEntity updatePatient(int idPatient, PatientEntity pacientUpdate) {
+    public PatientDto updatePatient(int idPatient, PatientDto pacientUpdate) {
         PatientEntity existingPatient = patientDao.findById(idPatient).orElse(null);
         if (existingPatient != null) {
             existingPatient.setFullName(pacientUpdate.getFullName());
@@ -43,27 +43,39 @@ public class PatientService {
             existingPatient.setLifeStory(pacientUpdate.getLifeStory());
             existingPatient.setObservations(pacientUpdate.getObservations());
         }
-        return patientDao.save(existingPatient);
+        return convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
     }
 
     public void deletePatient (int idPatient) {
         patientDao.deleteById(idPatient);
     }
-    public List<PatientEntity> getAll() {
-        return patientDao.findAll();
+
+    private PatientDto convertPatientEntityToDtoPatient (PatientEntity patientEntity) {
+        return PatientDto.builder().fullName(patientEntity.getFullName())
+									.dni(patientEntity.getDni())
+									.age(patientEntity.getAge())
+									.contactNumber(patientEntity.getContactNumber())
+									.address(patientEntity.getAddress())
+									.email(patientEntity.getEmail())
+									.occupation(patientEntity.getOccupation())
+									.dateOfAdmission(patientEntity.getDateOfAdmission())
+									.lifeStory(patientEntity.getLifeStory())
+									.observations(patientEntity.getObservations())
+									.build();
     }
-    private PatientDto convertToDtoPatient (PatientEntity patientEntity) {
-        PatientDto patientDto = new PatientDto();
-        patientDto.setFullName(patientEntity.getFullName());
-        patientDto.setDni(patientEntity.getDni());
-        patientDto.setAge(patientEntity.getAge());
-        patientDto.setContactNumber(patientEntity.getContactNumber());
-        patientDto.setAddress(patientEntity.getAddress());
-        patientDto.setEmail(patientEntity.getEmail());
-        patientDto.setOccupation(patientEntity.getOccupation());
-        patientDto.setDateOfAdmission(patientEntity.getDateOfAdmission());
-        patientDto.setLifeStory(patientEntity.getLifeStory());
-        patientDto.setObservations(patientEntity.getObservations());
-        return patientDto;
+    private PatientEntity convertToEntityPatient (PatientDto patientDto) {
+        PatientEntity patientEntity = new PatientEntity();
+        patientEntity.setFullName(patientDto.getFullName());
+        patientEntity.setDni(patientDto.getDni());
+        patientEntity.setAge(patientDto.getAge());
+        patientEntity.setContactNumber(patientDto.getContactNumber());
+        patientEntity.setAddress(patientDto.getAddress());
+        patientEntity.setEmail(patientDto.getEmail());
+        patientEntity.setOccupation(patientDto.getOccupation());
+        patientEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
+        patientEntity.setLifeStory(patientDto.getLifeStory());
+        patientEntity.setObservations(patientDto.getObservations());
+        return patientEntity;
     }
+    
 }
