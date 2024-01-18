@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.controller.convert.ControllerConverter;
 import com.example.demo.controller.dto.PatientCreationRequest;
 import com.example.demo.controller.dto.PatientListRequest;
 import com.example.demo.controller.dto.PatientResponse;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PatientDto addPatient (@RequestBody PatientCreationRequest patientRequest) {
     	
     	return PatientDto.builder().fullName(patientRequest.getFullName())
@@ -47,14 +51,15 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public PatientEntity getById(@PathVariable int id) {
-        return patientService.getPatientById(id);
+        return ControllerConverter.convertToEntityPatient(patientService.getPatientById(id));
     }
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
-    	PatientDto patientDto = convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
-    	return convertPatientDtoToPatientResponse(patientService.updatePatient(id, patientDto));
+    	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientService.updatePatient(id, patientDto));
     }
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         patientService.deletePatient(id);
     }
@@ -62,36 +67,10 @@ public class PatientController {
     public List<PatientResponse> getAll() {
         List<PatientDto> patients = patientService.getAll();
         return patients.stream()
-                .map(this::convertPatientDtoToPatientResponse)
+                .map(ControllerConverter::convertPatientDtoToPatientResponse)
                 .collect(Collectors.toList());
     }
     
-    private PatientDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {
-        return PatientDto.builder().fullName(patientUpdateRequest.getFullName())
-				        			.dni(patientUpdateRequest.getDni())
-				        			.age(patientUpdateRequest.getAge())
-				        			.contactNumber(patientUpdateRequest.getContactNumber())
-				        			.address(patientUpdateRequest.getAddress())
-				        			.email(patientUpdateRequest.getEmail())
-				        			.occupation(patientUpdateRequest.getOccupation())
-				        			.dateOfAdmission(patientUpdateRequest.getDateOfAdmission())
-				        			.lifeStory(patientUpdateRequest.getLifeStory())
-				        			.observations(patientUpdateRequest.getObservations())
-				        			.build();
-    }
-    private PatientResponse convertPatientDtoToPatientResponse (PatientDto patientDto) {
-    	return PatientResponse.builder().fullName(patientDto.getFullName())
-										.dni(patientDto.getDni())
-										.age(patientDto.getAge())
-										.contactNumber(patientDto.getContactNumber())
-										.address(patientDto.getAddress())
-										.email(patientDto.getEmail())
-										.occupation(patientDto.getOccupation())
-										.dateOfAdmission(patientDto.getDateOfAdmission())
-										.lifeStory(patientDto.getLifeStory())
-										.observations(patientDto.getObservations())
-										.build();
-
-    }
+    
 
 }
