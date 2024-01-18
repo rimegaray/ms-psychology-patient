@@ -1,9 +1,9 @@
-package com.example.demo.controller.convert;
+package com.kajucode.patient.controller.convert;
 
-import com.example.demo.controller.dto.PatientResponse;
-import com.example.demo.controller.dto.PatientUpdateRequest;
-import com.example.demo.repository.dto.PatientDto;
-import com.example.demo.repository.entity.PatientEntity;
+import com.kajucode.patient.controller.dto.PatientResponse;
+import com.kajucode.patient.controller.dto.PatientUpdateRequest;
+import com.kajucode.patient.repository.dto.PatientDto;
+import com.kajucode.patient.repository.entity.PatientEntity;
 
 public class ControllerConverter {
 	public static PatientDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {

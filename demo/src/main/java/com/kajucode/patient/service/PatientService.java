@@ -1,13 +1,12 @@
-package com.example.demo.service;
-
-
-import com.example.demo.repository.dao.PatientDao;
-import com.example.demo.repository.dto.PatientDto;
-import com.example.demo.repository.entity.PatientEntity;
-import com.example.demo.service.convert.ServicesConverter;
+package com.kajucode.patient.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import com.kajucode.patient.repository.dao.PatientDao;
+import com.kajucode.patient.repository.dto.PatientDto;
+import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.service.convert.ServicesConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;

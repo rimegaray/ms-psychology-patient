@@ -1,4 +1,4 @@
-package com.example.demo.controller.dto;
+package com.kajucode.patient.controller.dto;
 
 import java.util.Date;
 

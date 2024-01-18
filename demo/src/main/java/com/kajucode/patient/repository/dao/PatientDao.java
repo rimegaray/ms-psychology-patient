@@ -1,11 +1,11 @@
-package com.example.demo.repository.dao;
-
-import com.example.demo.repository.entity.PatientEntity;
+package com.kajucode.patient.repository.dao;
 
 import lombok.Builder;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.kajucode.patient.repository.entity.PatientEntity;
 
 @Repository
 public interface PatientDao  extends JpaRepository<PatientEntity, Integer>{

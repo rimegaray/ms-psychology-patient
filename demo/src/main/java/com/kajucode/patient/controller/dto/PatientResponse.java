@@ -1,18 +1,15 @@
-package com.example.demo.repository.dto;
+package com.kajucode.patient.controller.dto;
+
+import java.util.Date;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.util.Date;
-
-
-
 @Builder
 @Getter
 @Setter
-public class PatientDto implements Serializable{
+public class PatientResponse {
 	private String fullName;
     private int dni;
     private int age;

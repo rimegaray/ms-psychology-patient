@@ -1,13 +1,4 @@
-package com.example.demo.controller;
-
-import com.example.demo.controller.convert.ControllerConverter;
-import com.example.demo.controller.dto.PatientCreationRequest;
-import com.example.demo.controller.dto.PatientListRequest;
-import com.example.demo.controller.dto.PatientResponse;
-import com.example.demo.controller.dto.PatientUpdateRequest;
-import com.example.demo.repository.dto.PatientDto;
-import com.example.demo.repository.entity.PatientEntity;
-import com.example.demo.service.PatientService;
+package com.kajucode.patient.controller;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.kajucode.patient.controller.convert.ControllerConverter;
+import com.kajucode.patient.controller.dto.PatientCreationRequest;
+import com.kajucode.patient.controller.dto.PatientResponse;
+import com.kajucode.patient.controller.dto.PatientUpdateRequest;
+import com.kajucode.patient.repository.dto.PatientDto;
+import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.service.PatientService;
+
 import org.springframework.http.HttpStatus;
 
 

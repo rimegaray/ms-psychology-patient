@@ -1,7 +1,7 @@
-package com.example.demo.service.convert;
+package com.kajucode.patient.service.convert;
 
-import com.example.demo.repository.dto.PatientDto;
-import com.example.demo.repository.entity.PatientEntity;
+import com.kajucode.patient.repository.dto.PatientDto;
+import com.kajucode.patient.repository.entity.PatientEntity;
 
 public class ServicesConverter {
 	public static PatientDto convertPatientEntityToDtoPatient (PatientEntity patientEntity) {

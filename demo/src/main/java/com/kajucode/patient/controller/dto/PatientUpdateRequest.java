@@ -1,15 +1,17 @@
-package com.example.demo.controller.dto;
+package com.kajucode.patient.controller.dto;
 
 import java.util.Date;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-public class PatientResponse {
+@AllArgsConstructor
+@NoArgsConstructor
+public class PatientUpdateRequest {
 	private String fullName;
     private int dni;
     private int age;
