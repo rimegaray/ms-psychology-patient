@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.kajucode.patient.repository.dao.PatientDao;
-import com.kajucode.patient.repository.dto.PatientDto;
 import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.convert.ServiceConverter;
-import com.kajucode.patient.service.excepcion.PatientNotFoundException;
+import com.kajucode.patient.service.dto.PatientDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +53,4 @@ public class PatientService {
     public void deletePatient (int idPatient) {
         patientDao.deleteById(idPatient);
     }
-
-    
-    
 }

@@ -1,7 +1,7 @@
 package com.kajucode.patient.service.convert;
 
-import com.kajucode.patient.repository.dto.PatientDto;
 import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.experimental.UtilityClass;
 
