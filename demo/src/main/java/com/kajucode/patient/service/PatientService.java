@@ -1,6 +1,9 @@
 package com.kajucode.patient.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kajucode.patient.repository.dao.PatientDao;
@@ -27,11 +30,17 @@ public class PatientService {
                 .map(ServiceConverter::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
-    public PatientDto getPatientById(int patientId) {
-        PatientEntity patientEntity = patientDao.findById(patientId)
-                .orElseThrow();
-        return ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
+    public ResponseEntity<PatientDto> getPatientById(int patientId) {
+        PatientEntity patientEntity = patientDao.findById(patientId).orElse(null);
+
+        if (patientEntity != null) {
+            PatientDto patientDto = ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
+            return new ResponseEntity<>(patientDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
         PatientEntity existingPatient = patientDao.findById(patientId).orElseThrow(null);

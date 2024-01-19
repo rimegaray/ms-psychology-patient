@@ -15,9 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.demo.repository.dao.PatientDao;
-import com.example.demo.repository.dto.PatientDto;
-import com.example.demo.repository.entity.PatientEntity;
+import com.kajucode.patient.repository.dao.PatientDao;
+import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.service.PatientService;
+import com.kajucode.patient.service.dto.PatientDto;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
@@ -37,33 +38,32 @@ public class PatientServiceTest {
 		// Precondiciones
 		byte[] myFileTest = new byte[10];
 
-		PatientDto patientDtoExpected = new PatientDto();
-		patientDtoExpected.setFullName("Yeremi");
-		patientDtoExpected.setDni(76351126);
-		patientDtoExpected.setAge(17);
-		patientDtoExpected.setContactNumber(912923412);
-		patientDtoExpected.setAddress("la casa del raton");
-		patientDtoExpected.setEmail("yeremi.elraton@gmail.com");
-		patientDtoExpected.setOccupation("Estudiante");
-		patientDtoExpected.setDateOfAdmission(new Date("12/01/24"));
-		patientDtoExpected.setLifeStory(myFileTest);
-		patientDtoExpected.setObservations("Esta locuaz");
-
-		PatientEntity patientEntity = new PatientEntity();
-		patientEntity.setIdPatient(0);
-		patientEntity.setFullName("Yeremi");
-		patientEntity.setDni(76351126);
-		patientEntity.setAge(17);
-		patientEntity.setContactNumber(912923412);
-		patientEntity.setAddress("la casa del raton");
-		patientEntity.setEmail("yeremi.elraton@gmail.com");
-		patientEntity.setOccupation("Estudiante");
-		patientEntity.setDateOfAdmission(new Date("12/01/24"));
-		patientEntity.setLifeStory(myFileTest);
-		patientEntity.setObservations("Esta locuaz");
+		PatientDto patientDtoExpected = PatientDto.builder().fullName(("Yeremi"))
+				.dni(76351126)
+				.age(17)
+				.contactNumber(912923412)
+				.address("la casa del raton")
+				.email("yeremi.elraton@gmail.com")
+				.occupation("Estudiante")
+				.dateOfAdmission(new Date("12/01/24"))
+				.lifeStory(myFileTest)
+				.observations("Esta locuaz")
+				.build();
+		
+		PatientDto patientDto = PatientDto.builder().fullName(("Yeremi"))
+				.dni(76351126)
+				.age(17)
+				.contactNumber(912923412)
+				.address("la casa del raton")
+				.email("yeremi.elraton@gmail.com")
+				.occupation("Estudiante")
+				.dateOfAdmission(new Date("12/01/24"))
+				.lifeStory(myFileTest)
+				.observations("Esta locuaz")
+				.build();
 
 		PatientEntity patientEntityResult = new PatientEntity();
-		patientEntityResult.setIdPatient(0);
+		patientEntityResult.setPatientId(0);
 		patientEntityResult.setFullName("Yeremi");
 		patientEntityResult.setDni(76351126);
 		patientEntityResult.setAge(17);
@@ -74,24 +74,25 @@ public class PatientServiceTest {
 		patientEntityResult.setDateOfAdmission(new Date("12/01/24"));
 		patientEntityResult.setLifeStory(myFileTest);
 		patientEntityResult.setObservations("Esta locuaz");
-		Mockito.when(patientDaoMock.save(Mockito.any())).thenReturn(patientEntityResult);
+		
 
+		Mockito.when(patientDaoMock.save(Mockito.any())).thenReturn(patientEntityResult);
 		// Ejecucion
-		PatientDto patientDto = patientService.addProduct(patientEntity);
+		PatientDto patientDtoResult = patientService.addPatient(patientDto);
 
 		// Asserts
-		assertNotNull(patientDto);
-		assertEquals(patientDto.getFullName(), patientDtoExpected.getFullName());
-		assertEquals(patientDto.getFullName(), patientDtoExpected.getFullName());
-		assertEquals(patientDto.getDni(), patientDtoExpected.getDni());
-		assertEquals(patientDto.getAge(), patientDtoExpected.getAge());
-		assertEquals(patientDto.getContactNumber(), patientDtoExpected.getContactNumber());
-		assertEquals(patientDto.getAddress(), patientDtoExpected.getAddress());
-		assertEquals(patientDto.getEmail(), patientDtoExpected.getEmail());
-		assertEquals(patientDto.getOccupation(), patientDtoExpected.getOccupation());
-		assertEquals(patientDto.getDateOfAdmission(), patientDtoExpected.getDateOfAdmission());
-		assertEquals(patientDto.getLifeStory(), patientDtoExpected.getLifeStory());
-		assertEquals(patientDto.getObservations(), patientDtoExpected.getObservations());
+		assertNotNull(patientDtoResult);
+		assertEquals(patientDtoResult.getFullName(), patientDtoExpected.getFullName());
+		assertEquals(patientDtoResult.getFullName(), patientDtoExpected.getFullName());
+		assertEquals(patientDtoResult.getDni(), patientDtoExpected.getDni());
+		assertEquals(patientDtoResult.getAge(), patientDtoExpected.getAge());
+		assertEquals(patientDtoResult.getContactNumber(), patientDtoExpected.getContactNumber());
+		assertEquals(patientDtoResult.getAddress(), patientDtoExpected.getAddress());
+		assertEquals(patientDtoResult.getEmail(), patientDtoExpected.getEmail());
+		assertEquals(patientDtoResult.getOccupation(), patientDtoExpected.getOccupation());
+		assertEquals(patientDtoResult.getDateOfAdmission(), patientDtoExpected.getDateOfAdmission());
+		assertEquals(patientDtoResult.getLifeStory(), patientDtoExpected.getLifeStory());
+		assertEquals(patientDtoResult.getObservations(), patientDtoExpected.getObservations());
 	}
 
 	@Test
@@ -100,7 +101,7 @@ public class PatientServiceTest {
 		//precondiciones
 		Mockito.doNothing().when(patientDaoMock).deleteById(Mockito.anyInt());
 		//ejecucion real
-		patientService.deletePacient(123);
+		patientService.deletePatient(123);
 		//verificaciones
 		Mockito.verify(patientDaoMock, Mockito.times(1)).deleteById(123);
 	}
@@ -110,7 +111,7 @@ public class PatientServiceTest {
 		byte[] myFileTest = new byte[10];
 		
 		PatientEntity patientEntity = new PatientEntity();
-		patientEntity.setIdPatient(0);
+		patientEntity.setPatientId(0);
 		patientEntity.setFullName("Yeremi");
 		patientEntity.setDni(76351126);
 		patientEntity.setAge(17);
@@ -126,13 +127,23 @@ public class PatientServiceTest {
 
 		Mockito.when(patientDaoMock.findAll()).thenReturn(samplePatients);
 
-		List<PatientEntity> result = patientService.getAll();
+		List<PatientDto> result = patientService.getAll();
 
 		// verify
 		assertNotNull(result);
 		assertEquals(samplePatients.size(), result.size());
 		Mockito.verify(patientDaoMock, Mockito.times(1)).findAll();
-		assertTrue(result.containsAll(samplePatients) && samplePatients.containsAll(result));
+		assertEquals(result.get(0).getFullName(), samplePatients.get(0).getFullName());
+		assertEquals(result.get(0).getDni(), samplePatients.get(0).getDni());
+		assertEquals(result.get(0).getAge(), samplePatients.get(0).getAge());
+		assertEquals(result.get(0).getContactNumber(), samplePatients.get(0).getContactNumber());
+		assertEquals(result.get(0).getAddress(), samplePatients.get(0).getAddress());
+		assertEquals(result.get(0).getEmail(), samplePatients.get(0).getEmail());
+		assertEquals(result.get(0).getOccupation(), samplePatients.get(0).getOccupation());
+		assertEquals(result.get(0).getDateOfAdmission(), samplePatients.get(0).getDateOfAdmission());
+		assertEquals(result.get(0).getLifeStory(), samplePatients.get(0).getLifeStory());
+		assertEquals(result.get(0).getObservations(), samplePatients.get(0).getObservations());
+		
 	}
 
 }

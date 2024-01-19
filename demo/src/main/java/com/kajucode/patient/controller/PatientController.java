@@ -23,7 +23,9 @@ import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.PatientService;
 import com.kajucode.patient.service.dto.PatientDto;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @RequiredArgsConstructor
@@ -50,9 +52,16 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public PatientResponse getById(@PathVariable int id) {
-        return ControllerConverter.convertPatientDtoToPatientResponse(patientService.getPatientById(id));
+    public ResponseEntity<PatientResponse> getById(@PathVariable int id) {
+        try {
+            PatientDto patientDto = patientService.getPatientById(id);
+            PatientResponse patientResponse = ControllerConverter.convertPatientDtoToPatientResponse(patientDto);
+            return ResponseEntity.ok(patientResponse);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
     	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
