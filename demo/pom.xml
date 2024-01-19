@@ -8,11 +8,11 @@
 		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.kajucode</groupId>
 	<artifactId>ms-psychologist-patient</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>patientManagement</name>
-	<description>Demo project for Spring Boot</description>
+	<description>System of management of patient</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
