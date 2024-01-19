@@ -5,8 +5,11 @@ import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.dto.PatientDto;
 import com.kajucode.patient.repository.entity.PatientEntity;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class ControllerConverter {
-	public static PatientDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {
+	public PatientDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {
         return PatientDto.builder().fullName(patientUpdateRequest.getFullName())
 				        			.dni(patientUpdateRequest.getDni())
 				        			.age(patientUpdateRequest.getAge())
@@ -19,7 +22,7 @@ public class ControllerConverter {
 				        			.observations(patientUpdateRequest.getObservations())
 				        			.build();
     }
-	public static PatientResponse convertPatientDtoToPatientResponse (PatientDto patientDto) {
+	public PatientResponse convertPatientDtoToPatientResponse (PatientDto patientDto) {
     	return PatientResponse.builder().fullName(patientDto.getFullName())
 										.dni(patientDto.getDni())
 										.age(patientDto.getAge())
@@ -33,7 +36,34 @@ public class ControllerConverter {
 										.build();
 
     }
-	public static PatientEntity convertToEntityPatient (PatientDto patientDto) {
+	public PatientResponse convertPatientEntityToPatientResponse (PatientEntity patientEntity) {
+    	return PatientResponse.builder().fullName(patientEntity.getFullName())
+										.dni(patientEntity.getDni())
+										.age(patientEntity.getAge())
+										.contactNumber(patientEntity.getContactNumber())
+										.address(patientEntity.getAddress())
+										.email(patientEntity.getEmail())
+										.occupation(patientEntity.getOccupation())
+										.dateOfAdmission(patientEntity.getDateOfAdmission())
+										.lifeStory(patientEntity.getLifeStory())
+										.observations(patientEntity.getObservations())
+										.build();
+	}
+    	public PatientDto convertPatientEntityToDtoPatient (PatientEntity patientEntity) {
+            return PatientDto.builder().fullName(patientEntity.getFullName())
+    									.dni(patientEntity.getDni())
+    									.age(patientEntity.getAge())
+    									.contactNumber(patientEntity.getContactNumber())
+    									.address(patientEntity.getAddress())
+    									.email(patientEntity.getEmail())
+    									.occupation(patientEntity.getOccupation())
+    									.dateOfAdmission(patientEntity.getDateOfAdmission())
+    									.lifeStory(patientEntity.getLifeStory())
+    									.observations(patientEntity.getObservations())
+    									.build();
+
+    }
+	public PatientEntity convertToEntityPatient (PatientDto patientDto) {
         PatientEntity patientEntity = new PatientEntity();
         patientEntity.setFullName(patientDto.getFullName());
         patientEntity.setDni(patientDto.getDni());

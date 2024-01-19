@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import com.kajucode.patient.repository.dao.PatientDao;
 import com.kajucode.patient.repository.dto.PatientDto;
 import com.kajucode.patient.repository.entity.PatientEntity;
-import com.kajucode.patient.service.convert.ServicesConverter;
+import com.kajucode.patient.service.convert.ServiceConverter;
+import com.kajucode.patient.service.excepcion.PatientNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,17 +19,19 @@ public class PatientService {
     private final PatientDao patientDao;
 
     public PatientDto addPatient (PatientDto patientDto) {
-        PatientEntity patientResult = patientDao.save(ServicesConverter.convertToEntityPatient(patientDto));
-        return ServicesConverter.convertPatientEntityToDtoPatient(patientResult);
+        PatientEntity patientResult = patientDao.save(ServiceConverter.convertToEntityPatient(patientDto));
+        return ServiceConverter.convertPatientEntityToDtoPatient(patientResult);
     }
     public List<PatientDto> getAll() {
         List<PatientEntity> patientEntities = patientDao.findAll();
         return patientEntities.stream()
-                .map(ServicesConverter::convertPatientEntityToDtoPatient)
+                .map(ServiceConverter::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
     public PatientDto getPatientById(int patientId) {
-        return ServicesConverter.convertPatientEntityToDtoPatient(patientDao.findById(patientId).orElseThrow(null));
+        PatientEntity patientEntity = patientDao.findById(patientId)
+                .orElseThrow();
+        return ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
     }
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
@@ -45,7 +48,7 @@ public class PatientService {
             existingPatient.setLifeStory(patientDto.getLifeStory());
             existingPatient.setObservations(patientDto.getObservations());
         }
-        return ServicesConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
+        return ServiceConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
     }
 
     public void deletePatient (int idPatient) {

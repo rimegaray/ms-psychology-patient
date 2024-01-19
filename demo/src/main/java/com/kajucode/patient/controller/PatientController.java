@@ -50,8 +50,8 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public PatientEntity getById(@PathVariable int id) {
-        return ControllerConverter.convertToEntityPatient(patientService.getPatientById(id));
+    public PatientResponse getById(@PathVariable int id) {
+        return ControllerConverter.convertPatientDtoToPatientResponse(patientService.getPatientById(id));
     }
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {

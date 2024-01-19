@@ -3,8 +3,11 @@ package com.kajucode.patient.service.convert;
 import com.kajucode.patient.repository.dto.PatientDto;
 import com.kajucode.patient.repository.entity.PatientEntity;
 
-public class ServicesConverter {
-	public static PatientDto convertPatientEntityToDtoPatient (PatientEntity patientEntity) {
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class ServiceConverter {
+	public PatientDto convertPatientEntityToDtoPatient (PatientEntity patientEntity) {
         return PatientDto.builder().fullName(patientEntity.getFullName())
 									.dni(patientEntity.getDni())
 									.age(patientEntity.getAge())
@@ -17,7 +20,7 @@ public class ServicesConverter {
 									.observations(patientEntity.getObservations())
 									.build();
     }
-    public static PatientEntity convertToEntityPatient (PatientDto patientDto) {
+    public PatientEntity convertToEntityPatient (PatientDto patientDto) {
         PatientEntity patientEntity = new PatientEntity();
         patientEntity.setFullName(patientDto.getFullName());
         patientEntity.setDni(patientDto.getDni());
