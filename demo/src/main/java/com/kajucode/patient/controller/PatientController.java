@@ -3,6 +3,7 @@ package com.kajucode.patient.controller;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +22,9 @@ import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.PatientService;
+import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -50,18 +51,26 @@ public class PatientController {
 									.observations(patientRequest.getObservations())
 									.build();
     }
-
     @GetMapping("/{id}")
-    public ResponseEntity<PatientResponse> getById(@PathVariable int id) {
-        try {
-            PatientDto patientDto = patientService.getPatientById(id);
-            PatientResponse patientResponse = ControllerConverter.convertPatientDtoToPatientResponse(patientDto);
-            return ResponseEntity.ok(patientResponse);
-        } catch (NotFoundException e) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) {
+        Optional<PatientEntity> optionalPatientEntity = patientService.getPatientById(id);
+
+        if (optionalPatientEntity.isPresent()) {
+            PatientEntity patientEntity = optionalPatientEntity.get();
+            PatientDto patientDto = ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
+            return new ResponseEntity<>(patientDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    //@GetMapping("/(id)")
+    //
+    //public PatientResponse getById (@PathVariable int id) {
+    	//PatientDto patientDto = patientService.getPatientById(id);
+    	
+    //	return null;
+    //}
+    
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
     	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);

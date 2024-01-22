@@ -1,10 +1,12 @@
 package com.kajucode.patient.service;
 
 import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.kajucode.patient.repository.dao.PatientDao;
 import com.kajucode.patient.repository.entity.PatientEntity;
@@ -30,32 +32,28 @@ public class PatientService {
                 .map(ServiceConverter::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
-    public ResponseEntity<PatientDto> getPatientById(int patientId) {
-        PatientEntity patientEntity = patientDao.findById(patientId).orElse(null);
-
-        if (patientEntity != null) {
-            PatientDto patientDto = ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
-            return new ResponseEntity<>(patientDto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    
+    public Optional<PatientEntity> getPatientById(int patientId) {
+        // Lógica para obtener el paciente por ID (suponiendo que patientDao es tu DAO)
+        return patientDao.findById(patientId);
     }
-
+//debes estar cansada que todos los dias te diagan lo hermosa que eres
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
-        PatientEntity existingPatient = patientDao.findById(patientId).orElseThrow(null);
-        if (existingPatient != null) {
-            existingPatient.setFullName(patientDto.getFullName());
-            existingPatient.setDni(patientDto.getDni());
-            existingPatient.setAge(patientDto.getAge());
-            existingPatient.setContactNumber(patientDto.getContactNumber());
-            existingPatient.setAddress(patientDto.getAddress());
-            existingPatient.setEmail(patientDto.getEmail());
-            existingPatient.setOccupation(patientDto.getOccupation());
-            existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
-            existingPatient.setLifeStory(patientDto.getLifeStory());
-            existingPatient.setObservations(patientDto.getObservations());
-        }
+        PatientEntity existingPatient = patientDao.findById(patientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+
+        existingPatient.setFullName(patientDto.getFullName());
+        existingPatient.setDni(patientDto.getDni());
+        existingPatient.setAge(patientDto.getAge());
+        existingPatient.setContactNumber(patientDto.getContactNumber());
+        existingPatient.setAddress(patientDto.getAddress());
+        existingPatient.setEmail(patientDto.getEmail());
+        existingPatient.setOccupation(patientDto.getOccupation());
+        existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
+        existingPatient.setLifeStory(patientDto.getLifeStory());
+        existingPatient.setObservations(patientDto.getObservations());
+
         return ServiceConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
     }
 
