@@ -63,14 +63,7 @@ public class PatientController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //@GetMapping("/(id)")
-    //
-    //public PatientResponse getById (@PathVariable int id) {
-    	//PatientDto patientDto = patientService.getPatientById(id);
-    	
-    //	return null;
-    //}
-    
+
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
     	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
