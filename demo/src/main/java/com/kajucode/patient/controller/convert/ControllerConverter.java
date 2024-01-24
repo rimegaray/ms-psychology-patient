@@ -1,5 +1,6 @@
 package com.kajucode.patient.controller.convert;
 
+import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.entity.PatientEntity;
@@ -51,5 +52,18 @@ public class ControllerConverter {
         patientEntity.setLifeStory(patientDto.getLifeStory());
         patientEntity.setObservations(patientDto.getObservations());
         return patientEntity;
+    }
+	public PatientDto convertPatientCreationRequestToPatientDto (PatientCreationRequest patientCreationRequest) {
+        return PatientDto.builder().fullName(patientCreationRequest.getFullName())
+				        			.dni(patientCreationRequest.getDni())
+				        			.age(patientCreationRequest.getAge())
+				        			.contactNumber(patientCreationRequest.getContactNumber())
+				        			.address(patientCreationRequest.getAddress())
+				        			.email(patientCreationRequest.getEmail())
+				        			.occupation(patientCreationRequest.getOccupation())
+				        			.dateOfAdmission(patientCreationRequest.getDateOfAdmission())
+				        			.lifeStory(patientCreationRequest.getLifeStory())
+				        			.observations(patientCreationRequest.getObservations())
+				        			.build();
     }
 }
