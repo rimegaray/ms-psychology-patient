@@ -33,7 +33,7 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void addProductShouldReturnSuccessfulWhenDaoIsOk() {
+	public void addPatientShouldReturnSuccessfulWhenDaoIsOk() {
 		// Precondiciones
 		byte[] myFileTest = new byte[10];
 
@@ -60,7 +60,7 @@ public class PatientServiceTest {
 				.lifeStory(myFileTest)
 				.observations("Esta locuaz")
 				.build();
-
+  
 		PatientEntity patientEntityResult = new PatientEntity();
 		patientEntityResult.setPatientId(0);
 		patientEntityResult.setFullName("Yeremi");

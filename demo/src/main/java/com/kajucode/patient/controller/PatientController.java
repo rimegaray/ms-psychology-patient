@@ -50,7 +50,7 @@ public class PatientController {
 									.lifeStory(patientRequest.getLifeStory())
 									.observations(patientRequest.getObservations())
 									.build();
-    }
+    } 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) {
         Optional<PatientEntity> optionalPatientEntity = patientService.getPatientById(id);
@@ -62,8 +62,8 @@ public class PatientController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
+    } 
+ 
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
     	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);

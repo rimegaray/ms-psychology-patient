@@ -42,7 +42,7 @@ public class PatientService {
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
         PatientEntity existingPatient = patientDao.findById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
-
+ 
         existingPatient.setFullName(patientDto.getFullName());
         existingPatient.setDni(patientDto.getDni());
         existingPatient.setAge(patientDto.getAge());
