@@ -98,7 +98,7 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void verifyThatTheDeletePatientMethodIsUsed() {
+	public void shouldPatientDeleteIsSuccessfulWhenServiceIsSuccessful() {
 		
 		//precondiciones
 		Mockito.doNothing().when(patientDaoMock).deleteById(Mockito.anyInt());
@@ -109,7 +109,7 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void matchesPatientsInAPatientList() {
+	public void shouldGetAllReturnSuccessfulWhenDaoIsOk() {
 		byte[] myFileTest1 = new byte[10];
 		byte[] myFileTest2 = new byte[10];
 		Date date1 = new Date("12/01/24");
@@ -200,9 +200,9 @@ public class PatientServiceTest {
 		assertEquals(result.get(1).getLifeStory(), patientDtoExpecteds.get(1).getLifeStory());
 		assertEquals(result.get(1).getObservations(), patientDtoExpecteds.get(1).getObservations());
 	} 
-	
+	//
 	@Test
-	public void whenUsingThePatientByIdMethodSoThatTheStubInformationIsTheSameAsTheResponse() {
+	public void patientByIdShouldReturnSuccessfulWhenDaoIsOk() {
 		int patientId = 1;
         byte[] myFileTest = new byte[10];
         Date date = new Date("12/01/24");
@@ -250,7 +250,7 @@ public class PatientServiceTest {
 	}
 	
 	@Test
-	public void verifyThatPatientInformationIsBeingUpdated() {
+	public void shouldUpdateReturnSuccessfulWhenDaoIsOk() {
 		int id = 1;
     	byte[] myFileTest = new byte[10];
     	Date date = new Date("12/01/24");
@@ -305,7 +305,7 @@ public class PatientServiceTest {
 	}
 	
 	@Test
-    public void getPatientByIdPatientNotFound() {
+    public void shouldGetPatientByIdReturnExceptionWhenDaoReturnEmpty() {
 		
         int id = 1;
         when(patientDaoMock.findById(anyInt())).thenReturn(Optional.empty());
