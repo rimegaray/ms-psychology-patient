@@ -285,11 +285,10 @@ public class PatientServiceTest {
 	}
 	@Test
     public void testGetPatientById_PatientNotFound() {
-        // Arrange
+		
         int id = 1;
         when(patientDaoMock.findById(anyInt())).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ResponseStatusException.class, () -> {
             patientService.getPatientById(id);
         });
