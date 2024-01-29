@@ -1,8 +1,7 @@
-package com.example.demo.service;
+package com.kajucode.patient.service;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,9 +15,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,22 +25,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.kajucode.patient.repository.dao.PatientDao;
 import com.kajucode.patient.repository.entity.PatientEntity;
-import com.kajucode.patient.service.PatientService;
-import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
 
-	private static PatientService patientService;
-
 	@Mock
 	PatientDao patientDaoMock;
 
-	@BeforeEach
-	public void beforeAll() {
-		patientService = new PatientService(patientDaoMock);
-	}
+	@InjectMocks
+    private PatientService patientService;
 
 	@Test
 	public void addPatientShouldReturnSuccessfulWhenDaoIsOk() {
@@ -93,7 +86,6 @@ public class PatientServiceTest {
 		// Asserts
 		assertNotNull(patientDtoResult);
 		assertEquals(patientDtoResult.getFullName(), patientDtoExpected.getFullName());
-		assertEquals(patientDtoResult.getFullName(), patientDtoExpected.getFullName());
 		assertEquals(patientDtoResult.getDni(), patientDtoExpected.getDni());
 		assertEquals(patientDtoResult.getAge(), patientDtoExpected.getAge());
 		assertEquals(patientDtoResult.getContactNumber(), patientDtoExpected.getContactNumber());
@@ -106,7 +98,7 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void testDeletePatient() {
+	public void verifyThatTheDeletePatientMethodIsUsed() {
 		
 		//precondiciones
 		Mockito.doNothing().when(patientDaoMock).deleteById(Mockito.anyInt());
@@ -117,78 +109,105 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void testGetAll() {
+	public void matchesPatientsInAPatientList() {
 		byte[] myFileTest1 = new byte[10];
 		byte[] myFileTest2 = new byte[10];
-		Date date = new Date("12/01/24");
+		Date date1 = new Date("12/01/24");
+		Date date2= new Date("12/02/24");
+		
+		PatientDto patientDtoExpected1 = PatientDto.builder().fullName(("Yeremi"))
+				.dni(76351126)
+				.age(17)
+				.contactNumber(912923412)
+				.address("la casa del raton")
+				.email("yeremi.elraton@gmail.com")
+				.occupation("Estudiante")
+				.dateOfAdmission(date1)
+				.lifeStory(myFileTest1)
+				.observations("Esta locuaz")
+				.build();
+		
+		PatientDto patientDtoExpected2 = PatientDto.builder().fullName(("Juancho"))
+				.dni(87654321)
+				.age(28)
+				.contactNumber(987654321)
+				.address("2 cm antes de las nubes")
+				.email("juancho.elraton@gmail.com")
+				.occupation("Come Cuates")
+				.dateOfAdmission(date2)
+				.lifeStory(myFileTest2)
+				.observations("Esta lokazo")
+				.build();
 		
 		
-		PatientEntity patientEntity1 = new PatientEntity();
-		patientEntity1.setPatientId(0);
-		patientEntity1.setFullName("Yeremi");
-		patientEntity1.setDni(76351126);
-		patientEntity1.setAge(17);
-		patientEntity1.setContactNumber(912923412);
-		patientEntity1.setAddress("la casa del raton");
-		patientEntity1.setEmail("yeremi.elraton@gmail.com");
-		patientEntity1.setOccupation("Estudiante");
-		patientEntity1.setDateOfAdmission(date);
-		patientEntity1.setLifeStory(myFileTest1);
-		patientEntity1.setObservations("Esta locuaz");
+		PatientEntity stubPatients1 = new PatientEntity();
+		stubPatients1.setPatientId(0);
+		stubPatients1.setFullName("Yeremi");
+		stubPatients1.setDni(76351126);
+		stubPatients1.setAge(17);
+		stubPatients1.setContactNumber(912923412);
+		stubPatients1.setAddress("la casa del raton");
+		stubPatients1.setEmail("yeremi.elraton@gmail.com");
+		stubPatients1.setOccupation("Estudiante");
+		stubPatients1.setDateOfAdmission(date1);
+		stubPatients1.setLifeStory(myFileTest1);
+		stubPatients1.setObservations("Esta locuaz");
 		
-		PatientEntity patientEntity2 = new PatientEntity();
-		patientEntity2.setPatientId(0);
-		patientEntity2.setFullName("Juancho");
-		patientEntity2.setDni(87654321);
-		patientEntity2.setAge(28);
-		patientEntity2.setContactNumber(987654321);
-		patientEntity2.setAddress("2 cm antes de las nubes");
-		patientEntity2.setEmail("juancho.elraton@gmail.com");
-		patientEntity2.setOccupation("Come Cuates");
-		patientEntity2.setDateOfAdmission(date);
-		patientEntity2.setLifeStory(myFileTest2);
-		patientEntity2.setObservations("Esta lokazo");
+		PatientEntity stubPatients2 = new PatientEntity();
+		stubPatients2.setPatientId(1);
+		stubPatients2.setFullName("Juancho");
+		stubPatients2.setDni(87654321);
+		stubPatients2.setAge(28);
+		stubPatients2.setContactNumber(987654321);
+		stubPatients2.setAddress("2 cm antes de las nubes");
+		stubPatients2.setEmail("juancho.elraton@gmail.com");
+		stubPatients2.setOccupation("Come Cuates");
+		stubPatients2.setDateOfAdmission(date2);
+		stubPatients2.setLifeStory(myFileTest2);
+		stubPatients2.setObservations("Esta lokazo");
 		
-		List<PatientEntity> samplePatients = Arrays.asList(patientEntity1, patientEntity2);
+		List<PatientEntity> stubPatients = Arrays.asList(stubPatients1, stubPatients2);
+		List<PatientDto> patientDtoExpecteds = Arrays.asList(patientDtoExpected1, patientDtoExpected2);
 
-		Mockito.when(patientDaoMock.findAll()).thenReturn(samplePatients);
+		Mockito.when(patientDaoMock.findAll()).thenReturn(stubPatients);
 
 		List<PatientDto> result = patientService.getAll();
 
 		// verify
 		assertNotNull(result);
-		assertEquals(samplePatients.size(), result.size());
+		assertEquals(patientDtoExpecteds.size(), result.size());
 		verify(patientDaoMock, Mockito.times(1)).findAll();
 		
-		assertEquals(result.get(0).getFullName(), samplePatients.get(0).getFullName());
-		assertEquals(result.get(0).getDni(), samplePatients.get(0).getDni());
-		assertEquals(result.get(0).getAge(), samplePatients.get(0).getAge());
-		assertEquals(result.get(0).getContactNumber(), samplePatients.get(0).getContactNumber());
-		assertEquals(result.get(0).getAddress(), samplePatients.get(0).getAddress());
-		assertEquals(result.get(0).getEmail(), samplePatients.get(0).getEmail());
-		assertEquals(result.get(0).getOccupation(), samplePatients.get(0).getOccupation());
-		assertEquals(result.get(0).getDateOfAdmission(), samplePatients.get(0).getDateOfAdmission());
-		assertEquals(result.get(0).getLifeStory(), samplePatients.get(0).getLifeStory());
-		assertEquals(result.get(0).getObservations(), samplePatients.get(0).getObservations());
+		assertEquals(result.get(0).getFullName(), patientDtoExpecteds.get(0).getFullName());
+		assertEquals(result.get(0).getDni(), patientDtoExpecteds.get(0).getDni());
+		assertEquals(result.get(0).getAge(), patientDtoExpecteds.get(0).getAge());
+		assertEquals(result.get(0).getContactNumber(), patientDtoExpecteds.get(0).getContactNumber());
+		assertEquals(result.get(0).getAddress(), patientDtoExpecteds.get(0).getAddress());
+		assertEquals(result.get(0).getEmail(), patientDtoExpecteds.get(0).getEmail());
+		assertEquals(result.get(0).getOccupation(), patientDtoExpecteds.get(0).getOccupation());
+		assertEquals(result.get(0).getDateOfAdmission(), patientDtoExpecteds.get(0).getDateOfAdmission());
+		assertEquals(result.get(0).getLifeStory(), patientDtoExpecteds.get(0).getLifeStory());
+		assertEquals(result.get(0).getObservations(), patientDtoExpecteds.get(0).getObservations());
 		
-		assertEquals(result.get(1).getFullName(), samplePatients.get(1).getFullName());
-		assertEquals(result.get(1).getDni(), samplePatients.get(1).getDni());
-		assertEquals(result.get(1).getAge(), samplePatients.get(1).getAge());
-		assertEquals(result.get(1).getContactNumber(), samplePatients.get(1).getContactNumber());
-		assertEquals(result.get(1).getAddress(), samplePatients.get(1).getAddress());
-		assertEquals(result.get(1).getEmail(), samplePatients.get(1).getEmail());
-		assertEquals(result.get(1).getOccupation(), samplePatients.get(1).getOccupation());
-		assertEquals(result.get(1).getDateOfAdmission(), samplePatients.get(1).getDateOfAdmission());
-		assertEquals(result.get(1).getLifeStory(), samplePatients.get(1).getLifeStory());
-		assertEquals(result.get(1).getObservations(), samplePatients.get(1).getObservations());
+		assertEquals(result.get(1).getFullName(), patientDtoExpecteds.get(1).getFullName());
+		assertEquals(result.get(1).getDni(), patientDtoExpecteds.get(1).getDni());
+		assertEquals(result.get(1).getAge(), patientDtoExpecteds.get(1).getAge());
+		assertEquals(result.get(1).getContactNumber(), patientDtoExpecteds.get(1).getContactNumber());
+		assertEquals(result.get(1).getAddress(), patientDtoExpecteds.get(1).getAddress());
+		assertEquals(result.get(1).getEmail(), patientDtoExpecteds.get(1).getEmail());
+		assertEquals(result.get(1).getOccupation(), patientDtoExpecteds.get(1).getOccupation());
+		assertEquals(result.get(1).getDateOfAdmission(), patientDtoExpecteds.get(1).getDateOfAdmission());
+		assertEquals(result.get(1).getLifeStory(), patientDtoExpecteds.get(1).getLifeStory());
+		assertEquals(result.get(1).getObservations(), patientDtoExpecteds.get(1).getObservations());
 	} 
+	
 	@Test
-	public void testGetById() {
+	public void whenUsingThePatientByIdMethodSoThatTheStubInformationIsTheSameAsTheResponse() {
 		int patientId = 1;
         byte[] myFileTest = new byte[10];
         Date date = new Date("12/01/24");
         
-        PatientDto patientDtoResponse = PatientDto.builder()
+        PatientDto expectedPatientDto = PatientDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -218,24 +237,25 @@ public class PatientServiceTest {
 		
 		PatientDto result = patientService.getPatientById(patientId);
 		
-		assertEquals(patientDtoResponse.getFullName(), result.getFullName());
-        assertEquals(patientDtoResponse.getDni(), result.getDni());
-        assertEquals(patientDtoResponse.getAge(), result.getAge());
-        assertEquals(patientDtoResponse.getContactNumber() , result.getContactNumber());
-        assertEquals(patientDtoResponse.getAddress(), result.getAddress());
-        assertEquals(patientDtoResponse.getEmail(), result.getEmail());
-        assertEquals(patientDtoResponse.getOccupation(), result.getOccupation());
-        assertEquals(patientDtoResponse.getDateOfAdmission(), result.getDateOfAdmission());
-        assertArrayEquals(patientDtoResponse.getLifeStory(), result.getLifeStory());
-        assertEquals(patientDtoResponse.getObservations(), result.getObservations());     
+		assertEquals(expectedPatientDto.getFullName(), result.getFullName());
+        assertEquals(expectedPatientDto.getDni(), result.getDni());
+        assertEquals(expectedPatientDto.getAge(), result.getAge());
+        assertEquals(expectedPatientDto.getContactNumber() , result.getContactNumber());
+        assertEquals(expectedPatientDto.getAddress(), result.getAddress());
+        assertEquals(expectedPatientDto.getEmail(), result.getEmail());
+        assertEquals(expectedPatientDto.getOccupation(), result.getOccupation());
+        assertEquals(expectedPatientDto.getDateOfAdmission(), result.getDateOfAdmission());
+        assertArrayEquals(expectedPatientDto.getLifeStory(), result.getLifeStory());
+        assertEquals(expectedPatientDto.getObservations(), result.getObservations());     
 	}
+	
 	@Test
-	public void testUpdatePatient() {
+	public void verifyThatPatientInformationIsBeingUpdated() {
 		int id = 1;
     	byte[] myFileTest = new byte[10];
     	Date date = new Date("12/01/24");
     	
-    	PatientDto patientDtoResponse = PatientDto.builder()
+    	PatientDto expectedPatientDto = PatientDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -264,27 +284,28 @@ public class PatientServiceTest {
 		when(patientDaoMock.save(any())).thenReturn(patientEntityStub);
 		when(patientDaoMock.findById(anyInt())).thenReturn(Optional.of(patientEntityStub)); 
 		
-		PatientDto result = patientService.updatePatient(id, patientDtoResponse);
+		PatientDto result = patientService.updatePatient(id, expectedPatientDto);
 		
 		patientService.deletePatient(id);
 
         verify(patientDaoMock, times(1)).findById(id);
 		
-		assertEquals(patientDtoResponse.getFullName(), result.getFullName());
-        assertEquals(patientDtoResponse.getDni(), result.getDni());
-        assertEquals(patientDtoResponse.getAge(), result.getAge());
-        assertEquals(patientDtoResponse.getContactNumber() , result.getContactNumber());
-        assertEquals(patientDtoResponse.getAddress(), result.getAddress());
-        assertEquals(patientDtoResponse.getEmail(), result.getEmail());
-        assertEquals(patientDtoResponse.getOccupation(), result.getOccupation());
-        assertEquals(patientDtoResponse.getDateOfAdmission(), result.getDateOfAdmission());
-        assertArrayEquals(patientDtoResponse.getLifeStory(), result.getLifeStory());
-        assertEquals(patientDtoResponse.getObservations(), result.getObservations()); 
+		assertEquals(expectedPatientDto.getFullName(), result.getFullName());
+        assertEquals(expectedPatientDto.getDni(), result.getDni());
+        assertEquals(expectedPatientDto.getAge(), result.getAge());
+        assertEquals(expectedPatientDto.getContactNumber() , result.getContactNumber());
+        assertEquals(expectedPatientDto.getAddress(), result.getAddress());
+        assertEquals(expectedPatientDto.getEmail(), result.getEmail());
+        assertEquals(expectedPatientDto.getOccupation(), result.getOccupation());
+        assertEquals(expectedPatientDto.getDateOfAdmission(), result.getDateOfAdmission());
+        assertArrayEquals(expectedPatientDto.getLifeStory(), result.getLifeStory());
+        assertEquals(expectedPatientDto.getObservations(), result.getObservations()); 
 		
 		
 	}
+	
 	@Test
-    public void testGetPatientById_PatientNotFound() {
+    public void getPatientByIdPatientNotFound() {
 		
         int id = 1;
         when(patientDaoMock.findById(anyInt())).thenReturn(Optional.empty());

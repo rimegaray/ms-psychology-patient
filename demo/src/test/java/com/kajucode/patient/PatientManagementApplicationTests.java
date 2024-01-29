@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.kajucode.patient;
 
 class PatientManagementApplicationTests {
 
