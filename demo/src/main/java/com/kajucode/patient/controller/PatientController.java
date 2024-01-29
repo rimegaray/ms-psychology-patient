@@ -3,6 +3,7 @@ package com.kajucode.patient.controller;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +22,11 @@ import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.PatientService;
+import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @RequiredArgsConstructor
@@ -34,25 +37,25 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PatientDto addPatient (@RequestBody PatientCreationRequest patientRequest) {
-    	
-    	return PatientDto.builder().fullName(patientRequest.getFullName())
-									.dni(patientRequest.getDni())
-									.age(patientRequest.getAge())
-									.contactNumber(patientRequest.getContactNumber())
-									.address(patientRequest.getAddress())
-									.email(patientRequest.getEmail())
-									.occupation(patientRequest.getOccupation())
-									.dateOfAdmission(patientRequest.getDateOfAdmission())
-									.lifeStory(patientRequest.getLifeStory())
-									.observations(patientRequest.getObservations())
-									.build();
-    }
-
+    public PatientResponse addPatient (@RequestBody PatientCreationRequest patientRequest) {
+    	PatientDto newPatient = PatientDto.builder().fullName(patientRequest.getFullName())
+													.dni(patientRequest.getDni())
+													.age(patientRequest.getAge())
+													.contactNumber(patientRequest.getContactNumber())
+													.address(patientRequest.getAddress())
+													.email(patientRequest.getEmail())
+													.occupation(patientRequest.getOccupation())
+													.dateOfAdmission(patientRequest.getDateOfAdmission())
+													.lifeStory(patientRequest.getLifeStory())
+													.observations(patientRequest.getObservations())
+													.build();
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientService.addPatient(newPatient));
+    } 
     @GetMapping("/{id}")
-    public PatientResponse getById(@PathVariable int id) {
+    public PatientResponse getPatientById(@PathVariable int id) {
         return ControllerConverter.convertPatientDtoToPatientResponse(patientService.getPatientById(id));
     }
+ 
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
     	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
@@ -69,8 +72,8 @@ public class PatientController {
         return patients.stream()
                 .map(ControllerConverter::convertPatientDtoToPatientResponse)
                 .collect(Collectors.toList());
-    }
+    } 
     
-    
+     
 
 }

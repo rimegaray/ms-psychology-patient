@@ -1,5 +1,6 @@
 package com.kajucode.patient.controller.convert;
 
+import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.entity.PatientEntity;
@@ -37,19 +38,5 @@ public class ControllerConverter {
 										.build();
 
     }
-	
-	public PatientEntity convertToEntityPatient (PatientDto patientDto) {
-        PatientEntity patientEntity = new PatientEntity();
-        patientEntity.setFullName(patientDto.getFullName());
-        patientEntity.setDni(patientDto.getDni());
-        patientEntity.setAge(patientDto.getAge());
-        patientEntity.setContactNumber(patientDto.getContactNumber());
-        patientEntity.setAddress(patientDto.getAddress());
-        patientEntity.setEmail(patientDto.getEmail());
-        patientEntity.setOccupation(patientDto.getOccupation());
-        patientEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
-        patientEntity.setLifeStory(patientDto.getLifeStory());
-        patientEntity.setObservations(patientDto.getObservations());
-        return patientEntity;
-    }
+
 }

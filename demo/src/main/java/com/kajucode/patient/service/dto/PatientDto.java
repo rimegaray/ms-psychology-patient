@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Builder
 @Getter
-@Setter
 public class PatientDto implements Serializable{
 	private String fullName;
     private int dni;

@@ -2,15 +2,11 @@ package com.kajucode.patient.controller.dto;
 
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Getter
-@Setter
 public class PatientCreationRequest {
     private String fullName;
     private int dni;

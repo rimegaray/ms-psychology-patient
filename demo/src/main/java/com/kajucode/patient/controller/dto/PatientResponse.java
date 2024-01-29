@@ -8,12 +8,11 @@ import lombok.Setter;
 
 @Builder
 @Getter
-@Setter
 public class PatientResponse {
 	private String fullName;
     private int dni;
     private int age;
-    private int contactNumber;
+    private int contactNumber; 
     private String address;
     private String email;
     private String occupation;
