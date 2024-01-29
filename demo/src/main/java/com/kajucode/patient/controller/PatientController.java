@@ -37,32 +37,24 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PatientDto addPatient (@RequestBody PatientCreationRequest patientRequest) {
-    	
-    	return PatientDto.builder().fullName(patientRequest.getFullName())
-									.dni(patientRequest.getDni())
-									.age(patientRequest.getAge())
-									.contactNumber(patientRequest.getContactNumber())
-									.address(patientRequest.getAddress())
-									.email(patientRequest.getEmail())
-									.occupation(patientRequest.getOccupation())
-									.dateOfAdmission(patientRequest.getDateOfAdmission())
-									.lifeStory(patientRequest.getLifeStory())
-									.observations(patientRequest.getObservations())
-									.build();
+    public PatientResponse addPatient (@RequestBody PatientCreationRequest patientRequest) {
+    	PatientDto newPatient = PatientDto.builder().fullName(patientRequest.getFullName())
+													.dni(patientRequest.getDni())
+													.age(patientRequest.getAge())
+													.contactNumber(patientRequest.getContactNumber())
+													.address(patientRequest.getAddress())
+													.email(patientRequest.getEmail())
+													.occupation(patientRequest.getOccupation())
+													.dateOfAdmission(patientRequest.getDateOfAdmission())
+													.lifeStory(patientRequest.getLifeStory())
+													.observations(patientRequest.getObservations())
+													.build();
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientService.addPatient(newPatient));
     } 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) {
-        Optional<PatientEntity> optionalPatientEntity = patientService.getPatientById(id);
-
-        if (optionalPatientEntity.isPresent()) {
-            PatientEntity patientEntity = optionalPatientEntity.get();
-            PatientDto patientDto = ServiceConverter.convertPatientEntityToDtoPatient(patientEntity);
-            return new ResponseEntity<>(patientDto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    } 
+    public PatientResponse getPatientById(@PathVariable int id) {
+        return ControllerConverter.convertPatientDtoToPatientResponse(patientService.getPatientById(id));
+    }
  
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
@@ -80,8 +72,8 @@ public class PatientController {
         return patients.stream()
                 .map(ControllerConverter::convertPatientDtoToPatientResponse)
                 .collect(Collectors.toList());
-    }
+    } 
     
-    
+     
 
 }

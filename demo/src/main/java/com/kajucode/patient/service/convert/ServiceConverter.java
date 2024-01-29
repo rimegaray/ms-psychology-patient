@@ -20,7 +20,7 @@ public class ServiceConverter {
 									.observations(patientEntity.getObservations())
 									.build();
     }
-    public PatientEntity convertToEntityPatient (PatientDto patientDto) {
+    public PatientEntity convertPatientDtoToEntityPatient (PatientDto patientDto) {
         PatientEntity patientEntity = new PatientEntity();
         patientEntity.setFullName(patientDto.getFullName());
         patientEntity.setDni(patientDto.getDni());

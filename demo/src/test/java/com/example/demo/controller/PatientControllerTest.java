@@ -2,12 +2,21 @@ package com.example.demo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +24,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import com.kajucode.patient.controller.PatientController;
-import com.kajucode.patient.controller.convert.ControllerConverter;
 import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
@@ -30,16 +36,11 @@ import com.kajucode.patient.service.dto.PatientDto;
 @ExtendWith(MockitoExtension.class)
 public class PatientControllerTest {
 
-	 	//@InjectMocks
-	    //private PatientController patientController;
+	 	@InjectMocks
+	    private PatientController patientController;
 
 	    @Mock
 	    private PatientService patientServiceMock;
-
-	    @Mock
-	    private ControllerConverter controllerConverter; // Supongamos que tienes un convertidor
-	    
-	    PatientController patientController = new PatientController(patientServiceMock);
 
 
 	    @Test
@@ -47,57 +48,84 @@ public class PatientControllerTest {
 	        // Precondiciones
 	        int patientId = 1;
 	        byte[] myFileTest = new byte[10];
+	        Date date = new Date("12/01/24");
 	        
 	        // Configurar el mock del servicio para devolver un paciente simulado
-	        PatientEntity mockPatientEntity = new PatientEntity();
-	        mockPatientEntity.setPatientId(patientId);
-	        mockPatientEntity.setFullName("Yeremi");
-	        mockPatientEntity.setDni(76351126);
-	        mockPatientEntity.setAge(17);
-	        mockPatientEntity.setContactNumber(912923412);
-	        mockPatientEntity.setAddress("la casa del raton");
-	        mockPatientEntity.setEmail("yeremi.elraton@gmail.com");
-	        mockPatientEntity.setOccupation("Estudiante");
-	        mockPatientEntity.setDateOfAdmission(new Date("12/01/24"));
-	        mockPatientEntity.setLifeStory(myFileTest);
-	        mockPatientEntity.setObservations("Esta locuaz");
+	        PatientResponse mockPatientResponse = PatientResponse.builder()
+	                .fullName("Yeremi")
+	                .dni(76351126)
+	                .age(17)
+	                .contactNumber(912923412)
+	                .address("la casa del raton")
+	                .email("yeremi.elraton@gmail.com")
+	                .occupation("Estudiante")
+	                .dateOfAdmission(date)
+	                .lifeStory(myFileTest)
+	                .observations("Esta locuaz")
+	                .build();
 	        
-	        Mockito.when(patientServiceMock.getPatientById(patientId)).thenReturn(Optional.of(mockPatientEntity));
+	        PatientDto patientDtoStub = PatientDto.builder()
+	                .fullName("Yeremi")
+	                .dni(76351126)
+	                .age(17)
+	                .contactNumber(912923412)
+	                .address("la casa del raton")
+	                .email("yeremi.elraton@gmail.com")
+	                .occupation("Estudiante")
+	                .dateOfAdmission(date)
+	                .lifeStory(myFileTest)
+	                .observations("Esta locuaz")
+	                .build();
 
-	        // Llamar al método del controlador que se está probando
-	        ResponseEntity<PatientDto> responseEntity = patientController.getPatientById(patientId);
+	        Mockito.when(patientServiceMock.getPatientById(anyInt())).thenReturn(patientDtoStub);
+
+	        PatientResponse patientResponseResult = patientController.getPatientById(patientId);
 	        
 	        // Verificar el resultado
-	        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-	        assertEquals("Yeremi", responseEntity.getBody().getFullName());
-	        assertEquals(76351126, responseEntity.getBody().getDni());
-	        assertEquals(17, responseEntity.getBody().getAge());
-	        assertEquals(912923412 , responseEntity.getBody().getContactNumber());
-	        assertEquals("la casa del raton", responseEntity.getBody().getAddress());
-	        assertEquals("yeremi.elraton@gmail.com", responseEntity.getBody().getEmail());
-	        assertEquals("Estudiante", responseEntity.getBody().getOccupation());
-	        assertEquals(new Date("12/01/24"), responseEntity.getBody().getDateOfAdmission());
-	        assertArrayEquals(myFileTest, responseEntity.getBody().getLifeStory());
-	        assertEquals("Esta locuaz", responseEntity.getBody().getObservations());
+	        assertEquals(mockPatientResponse.getFullName(), patientResponseResult.getFullName());
+	        assertEquals(mockPatientResponse.getDni(), patientResponseResult.getDni());
+	        assertEquals(mockPatientResponse.getAge(), patientResponseResult.getAge());
+	        assertEquals(mockPatientResponse.getContactNumber() , patientResponseResult.getContactNumber());
+	        assertEquals(mockPatientResponse.getAddress(), patientResponseResult.getAddress());
+	        assertEquals(mockPatientResponse.getEmail(), patientResponseResult.getEmail());
+	        assertEquals(mockPatientResponse.getOccupation(), patientResponseResult.getOccupation());
+	        assertEquals(mockPatientResponse.getDateOfAdmission(), patientResponseResult.getDateOfAdmission());
+	        assertArrayEquals(mockPatientResponse.getLifeStory(), patientResponseResult.getLifeStory());
+	        assertEquals(mockPatientResponse.getObservations(), patientResponseResult.getObservations());
 	    }
     @Test
     public void testAddPatient() {
     	// Precondiciones
         byte[] myFileTest = new byte[10];
-
-        PatientCreationRequest mockPatientCreationRequest = new PatientCreationRequest();
-        mockPatientCreationRequest.setFullName("Yeremi");
-        mockPatientCreationRequest.setDni(76351126);
-        mockPatientCreationRequest.setAge(17);
-        mockPatientCreationRequest.setContactNumber(912923412);
-        mockPatientCreationRequest.setAddress("la casa del raton");
-        mockPatientCreationRequest.setEmail("yeremi.elraton@gmail.com");
-        mockPatientCreationRequest.setOccupation("Estudiante");
-        mockPatientCreationRequest.setDateOfAdmission(new Date("12/01/24"));
-        mockPatientCreationRequest.setLifeStory(myFileTest);
-        mockPatientCreationRequest.setObservations("Esta locuaz");
-
-        PatientDto expectedPatientDto = PatientDto.builder()
+        Date date = new Date("12/01/24");
+     
+        PatientCreationRequest patientCreationRequest =PatientCreationRequest.builder()
+        		.fullName("Yeremi")
+                .dni(76351126)
+                .age(17)
+                .contactNumber(912923412)
+                .address("la casa del raton")
+                .email("yeremi.elraton@gmail.com")
+                .occupation("Estudiante")
+                .dateOfAdmission(date)
+                .lifeStory(myFileTest)
+                .observations("Esta locuaz")
+                .build();
+        
+        PatientDto patientDtoStub = PatientDto.builder()
+                .fullName("Yeremi")
+                .dni(76351126)
+                .age(17)
+                .contactNumber(912923412)
+                .address("la casa del raton")
+                .email("yeremi.elraton@gmail.com") 
+                .occupation("Estudiante")
+                .dateOfAdmission(date)
+                .lifeStory(myFileTest)
+                .observations("Esta locuaz")
+                .build();
+        
+        PatientResponse expectedPatientResponse = PatientResponse.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -105,48 +133,150 @@ public class PatientControllerTest {
                 .address("la casa del raton")
                 .email("yeremi.elraton@gmail.com")
                 .occupation("Estudiante")
-                .dateOfAdmission(new Date("12/01/24"))
+                .dateOfAdmission(date)
                 .lifeStory(myFileTest)
                 .observations("Esta locuaz")
                 .build();
+
+                
+        when(patientServiceMock.addPatient(any())).thenReturn(patientDtoStub);
  
         // Ejecución
-        PatientDto addedPatientDto = patientController.addPatient(mockPatientCreationRequest);
+        PatientResponse patientResponseResult = patientController.addPatient(patientCreationRequest);
  
         // Assert
-        assertNotNull(addedPatientDto);
-        assertEquals("Yeremi", addedPatientDto.getFullName());
-        assertEquals(76351126, addedPatientDto.getDni());
-        assertEquals(17, addedPatientDto.getAge());
-        assertEquals(912923412 , addedPatientDto.getContactNumber());
-        assertEquals("la casa del raton", addedPatientDto.getAddress());
-        assertEquals("yeremi.elraton@gmail.com", addedPatientDto.getEmail());
-        assertEquals("Estudiante", addedPatientDto.getOccupation());
-        assertEquals(new Date("12/01/24"), addedPatientDto.getDateOfAdmission());
-        assertEquals(myFileTest, addedPatientDto.getLifeStory());
-        assertEquals("Esta locuaz", addedPatientDto.getObservations());
+        assertNotNull(patientResponseResult);
+        assertEquals(expectedPatientResponse.getFullName(), patientResponseResult.getFullName());
+        assertEquals(expectedPatientResponse.getDni(), patientResponseResult.getDni());
+        assertEquals(expectedPatientResponse.getAge(), patientResponseResult.getAge());
+        assertEquals(expectedPatientResponse.getContactNumber() , patientResponseResult.getContactNumber());
+        assertEquals(expectedPatientResponse.getAddress(), patientResponseResult.getAddress());
+        assertEquals(expectedPatientResponse.getEmail(), patientResponseResult.getEmail());
+        assertEquals(expectedPatientResponse.getOccupation(), patientResponseResult.getOccupation());
+        assertEquals(expectedPatientResponse.getDateOfAdmission(), patientResponseResult.getDateOfAdmission());
+        assertEquals(expectedPatientResponse.getLifeStory(), patientResponseResult.getLifeStory());
+        assertEquals(expectedPatientResponse.getObservations(), patientResponseResult.getObservations());
     } 
     @Test
     public void testUpdatePatient() {
     	int id = 1;
     	byte[] myFileTest = new byte[10];
+    	Date date = new Date("12/01/24");
 
-    	PatientUpdateRequest patientUpdateRequest = new PatientUpdateRequest();
-        patientUpdateRequest.setFullName("Yeremi");
-        patientUpdateRequest.setDni(76351126);
-        patientUpdateRequest.setAge(17);
-        patientUpdateRequest.setContactNumber(912923412);
-        patientUpdateRequest.setAddress("la casa del raton");
-        patientUpdateRequest.setEmail("yeremi.elraton@gmail.com");
-        patientUpdateRequest.setOccupation("Estudiante");
-        patientUpdateRequest.setDateOfAdmission(new Date("12/01/24"));
-        patientUpdateRequest.setLifeStory(myFileTest);
-        patientUpdateRequest.setObservations("Esta locuaz");
+    	PatientUpdateRequest expectedPatientResponse = new PatientUpdateRequest();
+        expectedPatientResponse.setFullName("Yeremi");
+        expectedPatientResponse.setDni(76351126);
+        expectedPatientResponse.setAge(17);
+        expectedPatientResponse.setContactNumber(912923412);
+        expectedPatientResponse.setAddress("la casa del raton");
+        expectedPatientResponse.setEmail("yeremi.elraton@gmail.com");
+        expectedPatientResponse.setOccupation("Estudiante");
+        expectedPatientResponse.setDateOfAdmission(date);
+        expectedPatientResponse.setLifeStory(myFileTest);
+        expectedPatientResponse.setObservations("Esta locuaz");
         
-        patientController.update(id, patientUpdateRequest);
+   
         
-        verify(patientController).update(eq(id), eq(patientUpdateRequest));
+        PatientDto patientDtoStub = PatientDto.builder()
+                .fullName("Yeremi")
+                .dni(76351126)
+                .age(17)
+                .contactNumber(912923412)
+                .address("la casa del raton")
+                .email("yeremi.elraton@gmail.com")
+                .occupation("Estudiante")
+                .dateOfAdmission(date)
+                .lifeStory(myFileTest)
+                .observations("Esta locuaz")
+                .build();
         
+        when(patientServiceMock.updatePatient(anyInt(), any())).thenReturn(patientDtoStub);
         
+        PatientResponse patientResponseResult = patientController.update(id, expectedPatientResponse);
+        
+        assertNotNull(patientResponseResult);
+        assertEquals(expectedPatientResponse.getFullName(), patientResponseResult.getFullName());
+        assertEquals(expectedPatientResponse.getDni(), patientResponseResult.getDni());
+        assertEquals(expectedPatientResponse.getAge(), patientResponseResult.getAge());
+        assertEquals(expectedPatientResponse.getContactNumber() , patientResponseResult.getContactNumber());
+        assertEquals(expectedPatientResponse.getAddress(), patientResponseResult.getAddress());
+        assertEquals(expectedPatientResponse.getEmail(), patientResponseResult.getEmail());
+        assertEquals(expectedPatientResponse.getOccupation(), patientResponseResult.getOccupation());
+        assertEquals(expectedPatientResponse.getDateOfAdmission(), patientResponseResult.getDateOfAdmission());
+        assertEquals(expectedPatientResponse.getLifeStory(), patientResponseResult.getLifeStory());
+        assertEquals(expectedPatientResponse.getObservations(), patientResponseResult.getObservations());
+    }
+    @Test
+    public void testDeletePatient() {
+    	int id = 1;
+    	
+    	doNothing().when(patientServiceMock).deletePatient(eq(id));
+    	
+        patientController.delete(id);
+    	
+        verify(patientServiceMock, times(1)).deletePatient(eq(id));
+
+    }
+    @Test
+    public void testGetAll() {
+    	byte[] myFileTest1 = new byte[10];
+		byte[] myFileTest2 = new byte[10];
+		Date date1 = new Date("12/01/24");
+		Date date2 = new Date("13/01/24"); 
+		
+    	PatientDto expectedPatientResponse1 = PatientDto.builder()
+                .fullName("Yeremi")
+                .dni(76351126)
+                .age(17)
+                .contactNumber(912923412)
+                .address("la casa del raton")
+                .email("yeremi.elraton@gmail.com")
+                .occupation("Estudiante")
+                .dateOfAdmission(date1)
+                .lifeStory(myFileTest1)
+                .observations("Esta locuaz")
+                .build();
+		
+    	PatientDto expectedPatientResponse2 = PatientDto.builder()
+                .fullName("Juancho")
+                .dni(87654321)
+                .age(28)
+                .contactNumber(987654321)
+                .address("2 cm antes de las nubes")
+                .email("juancho.elraton@gmail.com")
+                .occupation("Come Cuates")
+                .dateOfAdmission(date2)
+                .lifeStory(myFileTest2)
+                .observations("Esta lokazo")
+                .build();
+		
+		List<PatientDto> samplePatients = Arrays.asList(expectedPatientResponse1, expectedPatientResponse2);
+		
+		when(patientServiceMock.getAll()).thenReturn(samplePatients);
+		
+		List<PatientResponse> patientResponseResult = patientController.getAll();
+		
+		assertEquals(patientResponseResult.get(0).getFullName(), samplePatients.get(0).getFullName());
+		assertEquals(patientResponseResult.get(0).getDni(), samplePatients.get(0).getDni());
+		assertEquals(patientResponseResult.get(0).getAge(), samplePatients.get(0).getAge());
+		assertEquals(patientResponseResult.get(0).getContactNumber(), samplePatients.get(0).getContactNumber());
+		assertEquals(patientResponseResult.get(0).getAddress(), samplePatients.get(0).getAddress());
+		assertEquals(patientResponseResult.get(0).getEmail(), samplePatients.get(0).getEmail());
+		assertEquals(patientResponseResult.get(0).getOccupation(), samplePatients.get(0).getOccupation());
+		assertEquals(patientResponseResult.get(0).getDateOfAdmission(), samplePatients.get(0).getDateOfAdmission());
+		assertEquals(patientResponseResult.get(0).getLifeStory(), samplePatients.get(0).getLifeStory());
+		assertEquals(patientResponseResult.get(0).getObservations(), samplePatients.get(0).getObservations());
+		
+		assertEquals(patientResponseResult.get(1).getFullName(), samplePatients.get(1).getFullName());
+		assertEquals(patientResponseResult.get(1).getDni(), samplePatients.get(1).getDni());
+		assertEquals(patientResponseResult.get(1).getAge(), samplePatients.get(1).getAge());
+		assertEquals(patientResponseResult.get(1).getContactNumber(), samplePatients.get(1).getContactNumber());
+		assertEquals(patientResponseResult.get(1).getAddress(), samplePatients.get(1).getAddress());
+		assertEquals(patientResponseResult.get(1).getEmail(), samplePatients.get(1).getEmail());
+		assertEquals(patientResponseResult.get(1).getOccupation(), samplePatients.get(1).getOccupation());
+		assertEquals(patientResponseResult.get(1).getDateOfAdmission(), samplePatients.get(1).getDateOfAdmission());
+		assertEquals(patientResponseResult.get(1).getLifeStory(), samplePatients.get(1).getLifeStory());
+		assertEquals(patientResponseResult.get(1).getObservations(), samplePatients.get(1).getObservations());
+				
     }
 }

@@ -38,32 +38,5 @@ public class ControllerConverter {
 										.build();
 
     }
-	
-	public PatientEntity convertToEntityPatient (PatientDto patientDto) {
-        PatientEntity patientEntity = new PatientEntity();
-        patientEntity.setFullName(patientDto.getFullName());
-        patientEntity.setDni(patientDto.getDni());
-        patientEntity.setAge(patientDto.getAge());
-        patientEntity.setContactNumber(patientDto.getContactNumber());
-        patientEntity.setAddress(patientDto.getAddress());
-        patientEntity.setEmail(patientDto.getEmail());
-        patientEntity.setOccupation(patientDto.getOccupation());
-        patientEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
-        patientEntity.setLifeStory(patientDto.getLifeStory());
-        patientEntity.setObservations(patientDto.getObservations());
-        return patientEntity;
-    }
-	public PatientDto convertPatientCreationRequestToPatientDto (PatientCreationRequest patientCreationRequest) {
-        return PatientDto.builder().fullName(patientCreationRequest.getFullName())
-				        			.dni(patientCreationRequest.getDni())
-				        			.age(patientCreationRequest.getAge())
-				        			.contactNumber(patientCreationRequest.getContactNumber())
-				        			.address(patientCreationRequest.getAddress())
-				        			.email(patientCreationRequest.getEmail())
-				        			.occupation(patientCreationRequest.getOccupation())
-				        			.dateOfAdmission(patientCreationRequest.getDateOfAdmission())
-				        			.lifeStory(patientCreationRequest.getLifeStory())
-				        			.observations(patientCreationRequest.getObservations())
-				        			.build();
-    }
+
 }

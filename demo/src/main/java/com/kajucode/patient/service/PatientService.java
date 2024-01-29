@@ -23,7 +23,7 @@ public class PatientService {
     private final PatientDao patientDao;
 
     public PatientDto addPatient (PatientDto patientDto) {
-        PatientEntity patientResult = patientDao.save(ServiceConverter.convertToEntityPatient(patientDto));
+        PatientEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(patientDto));
         return ServiceConverter.convertPatientEntityToDtoPatient(patientResult);
     }
     public List<PatientDto> getAll() {
@@ -33,27 +33,26 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<PatientEntity> getPatientById(int patientId) {
-        // Lógica para obtener el paciente por ID (suponiendo que patientDao es tu DAO)
-        return patientDao.findById(patientId);
+    public PatientDto getPatientById(int patientId) {
+    	PatientEntity existingPatient = patientDao.findById(patientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+		return ServiceConverter.convertPatientEntityToDtoPatient(existingPatient); 
     }
-//debes estar cansada que todos los dias te diagan lo hermosa que eres
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
-        PatientEntity existingPatient = patientDao.findById(patientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
- 
+    	PatientEntity existingPatient = ServiceConverter.convertPatientDtoToEntityPatient(getPatientById(patientId));
+        
         existingPatient.setFullName(patientDto.getFullName());
         existingPatient.setDni(patientDto.getDni());
-        existingPatient.setAge(patientDto.getAge());
+        existingPatient.setAge(patientDto.getAge()); 
         existingPatient.setContactNumber(patientDto.getContactNumber());
         existingPatient.setAddress(patientDto.getAddress());
         existingPatient.setEmail(patientDto.getEmail());
         existingPatient.setOccupation(patientDto.getOccupation());
         existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
         existingPatient.setLifeStory(patientDto.getLifeStory());
-        existingPatient.setObservations(patientDto.getObservations());
-
+        existingPatient.setObservations(patientDto.getObservations()); 
+     
         return ServiceConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
     }
 
