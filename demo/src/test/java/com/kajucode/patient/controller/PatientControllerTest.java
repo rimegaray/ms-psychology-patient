@@ -90,7 +90,7 @@ public class PatientControllerTest {
 	    }
 	    
     @Test
-    public void shouldPatientAddReturnPatientResponseWhenServiceReturnPatientDto() {
+    public void shouldAddPatientReturnPatientResponseWhenServiceReturnPatientDto() {
     	// Precondiciones
         byte[] myFileTest = new byte[10];
         Date date = new Date("12/01/24");
@@ -155,7 +155,7 @@ public class PatientControllerTest {
     } 
     
     @Test
-    public void shouldPatientUpdateReturnPatientResponseWhenServiceReturnPatientDto() {
+    public void shouldUpdatePatientReturnPatientResponseWhenServiceReturnPatientDto() {
     	int id = 1;
     	byte[] myFileTest = new byte[10];
     	Date date = new Date("12/01/24");
@@ -205,7 +205,7 @@ public class PatientControllerTest {
     }
     
     @Test
-    public void shouldPatientDeleteIsSuccessfulWhenServiceIsSuccessful() {
+    public void shouldDeletePatientIsSuccessfulWhenServiceIsSuccessful() {
     	int id = 1;
     	
     	doNothing().when(patientServiceMock).deletePatient(eq(id));
@@ -217,13 +217,13 @@ public class PatientControllerTest {
     }
     
     @Test
-    public void shouldPatientGetAllReturnPatientResponseWhenServiceReturnListToPatientDto() {
+    public void shouldGetAllPatientsReturnPatientResponseWhenServiceReturnListToPatientDto() {
     	byte[] myFileTest1 = new byte[10];
 		byte[] myFileTest2 = new byte[10];
 		Date date1 = new Date("12/01/24");
 		Date date2 = new Date("13/01/24"); 
 		
-    	PatientDto expectedPatientResponse1 = PatientDto.builder()
+    	PatientResponse patientResponse1 = PatientResponse.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -236,7 +236,7 @@ public class PatientControllerTest {
                 .observations("Esta locuaz")
                 .build();
 		
-    	PatientDto expectedPatientResponse2 = PatientDto.builder()
+    	PatientResponse patientResponse2 = PatientResponse.builder()
                 .fullName("Juancho")
                 .dni(87654321)
                 .age(28)
@@ -248,34 +248,60 @@ public class PatientControllerTest {
                 .lifeStory(myFileTest2)
                 .observations("Esta lokazo")
                 .build();
+    	
+    	PatientDto stubPatientDto1 = PatientDto.builder().fullName(("Yeremi"))
+				.dni(76351126)
+				.age(17)
+				.contactNumber(912923412)
+				.address("la casa del raton")
+				.email("yeremi.elraton@gmail.com")
+				.occupation("Estudiante")
+				.dateOfAdmission(date1)
+				.lifeStory(myFileTest1)
+				.observations("Esta locuaz")
+				.build();
 		
-		List<PatientDto> samplePatients = Arrays.asList(expectedPatientResponse1, expectedPatientResponse2);
+    	PatientDto stubPatientDto2 = PatientDto.builder().fullName(("Juancho"))
+				.dni(87654321)
+				.age(28)
+				.contactNumber(987654321)
+				.address("2 cm antes de las nubes")
+				.email("juancho.elraton@gmail.com")
+				.occupation("Come Cuates")
+				.dateOfAdmission(date2)
+				.lifeStory(myFileTest2)
+				.observations("Esta lokazo")
+				.build();
 		
-		when(patientServiceMock.getAll()).thenReturn(samplePatients);
+		
+		List<PatientDto> stubPatientDtos = Arrays.asList(stubPatientDto1, stubPatientDto2);
+		List<PatientResponse> patientResponses = Arrays.asList(patientResponse1, patientResponse2);
+		
+		when(patientServiceMock.getAll()).thenReturn(stubPatientDtos);
 		
 		List<PatientResponse> patientResponseResult = patientController.getAll();
 		
-		assertEquals(patientResponseResult.get(0).getFullName(), samplePatients.get(0).getFullName());
-		assertEquals(patientResponseResult.get(0).getDni(), samplePatients.get(0).getDni());
-		assertEquals(patientResponseResult.get(0).getAge(), samplePatients.get(0).getAge());
-		assertEquals(patientResponseResult.get(0).getContactNumber(), samplePatients.get(0).getContactNumber());
-		assertEquals(patientResponseResult.get(0).getAddress(), samplePatients.get(0).getAddress());
-		assertEquals(patientResponseResult.get(0).getEmail(), samplePatients.get(0).getEmail());
-		assertEquals(patientResponseResult.get(0).getOccupation(), samplePatients.get(0).getOccupation());
-		assertEquals(patientResponseResult.get(0).getDateOfAdmission(), samplePatients.get(0).getDateOfAdmission());
-		assertEquals(patientResponseResult.get(0).getLifeStory(), samplePatients.get(0).getLifeStory());
-		assertEquals(patientResponseResult.get(0).getObservations(), samplePatients.get(0).getObservations());
+		assertEquals(patientResponseResult.get(0).getFullName(), patientResponses.get(0).getFullName());
+		assertEquals(patientResponseResult.get(0).getDni(), patientResponses.get(0).getDni());
+		assertEquals(patientResponseResult.get(0).getAge(), patientResponses.get(0).getAge());
+		assertEquals(patientResponseResult.get(0).getContactNumber(), patientResponses.get(0).getContactNumber());
+		assertEquals(patientResponseResult.get(0).getAddress(), patientResponses.get(0).getAddress());
+		assertEquals(patientResponseResult.get(0).getEmail(), patientResponses.get(0).getEmail());
+		assertEquals(patientResponseResult.get(0).getOccupation(), patientResponses.get(0).getOccupation());
+		assertEquals(patientResponseResult.get(0).getDateOfAdmission(), patientResponses.get(0).getDateOfAdmission());
+		assertEquals(patientResponseResult.get(0).getLifeStory(), patientResponses.get(0).getLifeStory());
+		assertEquals(patientResponseResult.get(0).getObservations(), patientResponses.get(0).getObservations());
 		
-		assertEquals(patientResponseResult.get(1).getFullName(), samplePatients.get(1).getFullName());
-		assertEquals(patientResponseResult.get(1).getDni(), samplePatients.get(1).getDni());
-		assertEquals(patientResponseResult.get(1).getAge(), samplePatients.get(1).getAge());
-		assertEquals(patientResponseResult.get(1).getContactNumber(), samplePatients.get(1).getContactNumber());
-		assertEquals(patientResponseResult.get(1).getAddress(), samplePatients.get(1).getAddress());
-		assertEquals(patientResponseResult.get(1).getEmail(), samplePatients.get(1).getEmail());
-		assertEquals(patientResponseResult.get(1).getOccupation(), samplePatients.get(1).getOccupation());
-		assertEquals(patientResponseResult.get(1).getDateOfAdmission(), samplePatients.get(1).getDateOfAdmission());
-		assertEquals(patientResponseResult.get(1).getLifeStory(), samplePatients.get(1).getLifeStory());
-		assertEquals(patientResponseResult.get(1).getObservations(), samplePatients.get(1).getObservations());
+		assertEquals(patientResponseResult.get(1).getFullName(), patientResponses.get(1).getFullName());
+		assertEquals(patientResponseResult.get(1).getDni(), patientResponses.get(1).getDni());
+		assertEquals(patientResponseResult.get(1).getAge(), patientResponses.get(1).getAge());
+		assertEquals(patientResponseResult.get(1).getContactNumber(), patientResponses.get(1).getContactNumber());
+		assertEquals(patientResponseResult.get(1).getAddress(), patientResponses.get(1).getAddress());
+		assertEquals(patientResponseResult.get(1).getEmail(), patientResponses.get(1).getEmail());
+		assertEquals(patientResponseResult.get(1).getOccupation(), patientResponses.get(1).getOccupation());
+		assertEquals(patientResponseResult.get(1).getDateOfAdmission(), patientResponses.get(1).getDateOfAdmission());
+		assertEquals(patientResponseResult.get(1).getLifeStory(), patientResponses.get(1).getLifeStory());
+		assertEquals(patientResponseResult.get(1).getObservations(), patientResponses.get(1).getObservations());
 				
     }
 }

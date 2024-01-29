@@ -37,7 +37,7 @@ public class PatientServiceTest {
     private PatientService patientService;
 
 	@Test
-	public void addPatientShouldReturnSuccessfulWhenDaoIsOk() {
+	public void shouldAddPatientReturnSuccessfulWhenDaoIsOk() {
 		// Precondiciones
 		byte[] myFileTest = new byte[10];
 
@@ -98,7 +98,7 @@ public class PatientServiceTest {
 	}
 
 	@Test
-	public void shouldPatientDeleteIsSuccessfulWhenServiceIsSuccessful() {
+	public void shouldDeletePatientIsSuccessfulWhenServiceIsSuccessful() {
 		
 		//precondiciones
 		Mockito.doNothing().when(patientDaoMock).deleteById(Mockito.anyInt());
@@ -202,7 +202,7 @@ public class PatientServiceTest {
 	} 
 	//
 	@Test
-	public void patientByIdShouldReturnSuccessfulWhenDaoIsOk() {
+	public void shouldGetPatientByIdReturnSuccessfulWhenDaoIsOk() {
 		int patientId = 1;
         byte[] myFileTest = new byte[10];
         Date date = new Date("12/01/24");
@@ -250,7 +250,7 @@ public class PatientServiceTest {
 	}
 	
 	@Test
-	public void shouldUpdateReturnSuccessfulWhenDaoIsOk() {
+	public void shouldUpdatePatientReturnSuccessfulWhenDaoIsOk() {
 		int id = 1;
     	byte[] myFileTest = new byte[10];
     	Date date = new Date("12/01/24");
