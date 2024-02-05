@@ -1,9 +1,7 @@
 package com.kajucode.patient.controller.convert;
 
-import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
-import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.experimental.UtilityClass;

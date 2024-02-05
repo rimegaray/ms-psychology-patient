@@ -20,7 +20,7 @@ import com.kajucode.patient.controller.convert.ControllerConverter;
 import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
-import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.repository.entity.PsychologistEntity;
 import com.kajucode.patient.service.PatientService;
 import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;

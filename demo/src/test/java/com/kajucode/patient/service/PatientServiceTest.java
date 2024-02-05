@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.kajucode.patient.repository.dao.PatientDao;
-import com.kajucode.patient.repository.entity.PatientEntity;
+import com.kajucode.patient.repository.entity.PsychologistEntity;
 import com.kajucode.patient.service.dto.PatientDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +65,7 @@ public class PatientServiceTest {
 				.observations("Esta locuaz")
 				.build();
   
-		PatientEntity patientEntityResult = new PatientEntity();
+		PsychologistEntity patientEntityResult = new PsychologistEntity();
 		patientEntityResult.setPatientId(0);
 		patientEntityResult.setFullName("Yeremi");
 		patientEntityResult.setDni(76351126);
@@ -140,7 +140,7 @@ public class PatientServiceTest {
 				.build();
 		
 		
-		PatientEntity stubPatients1 = new PatientEntity();
+		PsychologistEntity stubPatients1 = new PsychologistEntity();
 		stubPatients1.setPatientId(0);
 		stubPatients1.setFullName("Yeremi");
 		stubPatients1.setDni(76351126);
@@ -153,7 +153,7 @@ public class PatientServiceTest {
 		stubPatients1.setLifeStory(myFileTest1);
 		stubPatients1.setObservations("Esta locuaz");
 		
-		PatientEntity stubPatients2 = new PatientEntity();
+		PsychologistEntity stubPatients2 = new PsychologistEntity();
 		stubPatients2.setPatientId(1);
 		stubPatients2.setFullName("Juancho");
 		stubPatients2.setDni(87654321);
@@ -166,7 +166,7 @@ public class PatientServiceTest {
 		stubPatients2.setLifeStory(myFileTest2);
 		stubPatients2.setObservations("Esta lokazo");
 		
-		List<PatientEntity> stubPatients = Arrays.asList(stubPatients1, stubPatients2);
+		List<PsychologistEntity> stubPatients = Arrays.asList(stubPatients1, stubPatients2);
 		List<PatientDto> patientDtoExpecteds = Arrays.asList(patientDtoExpected1, patientDtoExpected2);
 
 		Mockito.when(patientDaoMock.findAll()).thenReturn(stubPatients);
@@ -220,7 +220,7 @@ public class PatientServiceTest {
                 .observations("Esta locuaz")
                 .build();
         
-        PatientEntity patientEntityStub = new PatientEntity();
+        PsychologistEntity patientEntityStub = new PsychologistEntity();
 		patientEntityStub.setPatientId(0);
 		patientEntityStub.setFullName("Yeremi");
 		patientEntityStub.setDni(76351126);
@@ -268,7 +268,7 @@ public class PatientServiceTest {
                 .observations("Esta locuaz")
                 .build();
         
-        PatientEntity patientEntityStub = new PatientEntity();
+        PsychologistEntity patientEntityStub = new PsychologistEntity();
 		patientEntityStub.setPatientId(0);
 		patientEntityStub.setFullName("Yeremi");
 		patientEntityStub.setDni(76351126);
