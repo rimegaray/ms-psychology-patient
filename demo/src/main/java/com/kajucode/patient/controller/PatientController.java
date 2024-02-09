@@ -22,8 +22,9 @@ import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.repository.entity.PsychologistEntity;
 import com.kajucode.patient.service.PatientService;
+import com.kajucode.patient.service.PatientServiceInterface;
 import com.kajucode.patient.service.convert.ServiceConverter;
-import com.kajucode.patient.service.dto.PatientDto;
+import com.kajucode.patient.service.dto.MaplicacionDto;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +34,12 @@ import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
-    private final PatientService patientService;
+    private final PatientServiceInterface patientServiceInterface;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PatientResponse addPatient (@RequestBody PatientCreationRequest patientRequest) {
-    	PatientDto newPatient = PatientDto.builder().fullName(patientRequest.getFullName())
+    	MaplicacionDto newPatient = MaplicacionDto.builder().fullName(patientRequest.getFullName())
 													.dni(patientRequest.getDni())
 													.age(patientRequest.getAge())
 													.contactNumber(patientRequest.getContactNumber())
@@ -49,26 +50,26 @@ public class PatientController {
 													.lifeStory(patientRequest.getLifeStory())
 													.observations(patientRequest.getObservations())
 													.build();
-    	return ControllerConverter.convertPatientDtoToPatientResponse(patientService.addPatient(newPatient));
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.addPatient(newPatient));
     } 
     @GetMapping("/{id}")
     public PatientResponse getPatientById(@PathVariable int id) {
-        return ControllerConverter.convertPatientDtoToPatientResponse(patientService.getPatientById(id));
+        return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.getPatientById(id));
     }
  
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
-    	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
-    	return ControllerConverter.convertPatientDtoToPatientResponse(patientService.updatePatient(id, patientDto));
+    	MaplicacionDto maplicacionDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.updatePatient(id, maplicacionDto));
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        patientService.deletePatient(id);
+        patientServiceInterface.deletePatient(id);
     }
     @GetMapping
     public List<PatientResponse> getAll() {
-        List<PatientDto> patients = patientService.getAll();
+        List<MaplicacionDto> patients = patientServiceInterface.getAll();
         return patients.stream()
                 .map(ControllerConverter::convertPatientDtoToPatientResponse)
                 .collect(Collectors.toList());

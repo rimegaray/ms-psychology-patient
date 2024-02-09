@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Builder
 @Getter
-public class PatientDto implements Serializable{
+public class MaplicacionDto implements Serializable{
 	private String fullName;
     private int dni;
     private int age;

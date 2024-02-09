@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.kajucode.patient.repository.dao.PatientDao;
 import com.kajucode.patient.repository.entity.PsychologistEntity;
-import com.kajucode.patient.service.dto.PatientDto;
+import com.kajucode.patient.service.dto.MaplicacionDto;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
@@ -41,7 +41,7 @@ public class PatientServiceTest {
 		// Precondiciones
 		byte[] myFileTest = new byte[10];
 
-		PatientDto patientDtoExpected = PatientDto.builder().fullName(("Yeremi"))
+		MaplicacionDto patientDtoExpected = MaplicacionDto.builder().fullName(("Yeremi"))
 				.dni(76351126)
 				.age(17)
 				.contactNumber(912923412)
@@ -53,7 +53,7 @@ public class PatientServiceTest {
 				.observations("Esta locuaz")
 				.build();
 		
-		PatientDto patientDto = PatientDto.builder().fullName(("Yeremi"))
+		MaplicacionDto maplicacionDto = MaplicacionDto.builder().fullName(("Yeremi"))
 				.dni(76351126)
 				.age(17)
 				.contactNumber(912923412)
@@ -81,7 +81,7 @@ public class PatientServiceTest {
 
 		Mockito.when(patientDaoMock.save(Mockito.any())).thenReturn(patientEntityResult);
 		// Ejecucion
-		PatientDto patientDtoResult = patientService.addPatient(patientDto);
+		MaplicacionDto patientDtoResult = patientService.addPatient(maplicacionDto);
 
 		// Asserts
 		assertNotNull(patientDtoResult);
@@ -115,7 +115,7 @@ public class PatientServiceTest {
 		Date date1 = new Date("12/01/24");
 		Date date2= new Date("12/02/24");
 		
-		PatientDto patientDtoExpected1 = PatientDto.builder().fullName(("Yeremi"))
+		MaplicacionDto patientDtoExpected1 = MaplicacionDto.builder().fullName(("Yeremi"))
 				.dni(76351126)
 				.age(17)
 				.contactNumber(912923412)
@@ -127,7 +127,7 @@ public class PatientServiceTest {
 				.observations("Esta locuaz")
 				.build();
 		
-		PatientDto patientDtoExpected2 = PatientDto.builder().fullName(("Juancho"))
+		MaplicacionDto patientDtoExpected2 = MaplicacionDto.builder().fullName(("Juancho"))
 				.dni(87654321)
 				.age(28)
 				.contactNumber(987654321)
@@ -167,11 +167,11 @@ public class PatientServiceTest {
 		stubPatients2.setObservations("Esta lokazo");
 		
 		List<PsychologistEntity> stubPatients = Arrays.asList(stubPatients1, stubPatients2);
-		List<PatientDto> patientDtoExpecteds = Arrays.asList(patientDtoExpected1, patientDtoExpected2);
+		List<MaplicacionDto> patientDtoExpecteds = Arrays.asList(patientDtoExpected1, patientDtoExpected2);
 
 		Mockito.when(patientDaoMock.findAll()).thenReturn(stubPatients);
 
-		List<PatientDto> result = patientService.getAll();
+		List<MaplicacionDto> result = patientService.getAll();
 
 		// verify
 		assertNotNull(result);
@@ -207,7 +207,7 @@ public class PatientServiceTest {
         byte[] myFileTest = new byte[10];
         Date date = new Date("12/01/24");
         
-        PatientDto expectedPatientDto = PatientDto.builder()
+        MaplicacionDto expectedPatientDto = MaplicacionDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -235,7 +235,7 @@ public class PatientServiceTest {
 		
 		when(patientDaoMock.findById(anyInt())).thenReturn(Optional.of(patientEntityStub));
 		
-		PatientDto result = patientService.getPatientById(patientId);
+		MaplicacionDto result = patientService.getPatientById(patientId);
 		
 		assertEquals(expectedPatientDto.getFullName(), result.getFullName());
         assertEquals(expectedPatientDto.getDni(), result.getDni());
@@ -255,7 +255,7 @@ public class PatientServiceTest {
     	byte[] myFileTest = new byte[10];
     	Date date = new Date("12/01/24");
     	
-    	PatientDto expectedPatientDto = PatientDto.builder()
+    	MaplicacionDto expectedPatientDto = MaplicacionDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -284,7 +284,7 @@ public class PatientServiceTest {
 		when(patientDaoMock.save(any())).thenReturn(patientEntityStub);
 		when(patientDaoMock.findById(anyInt())).thenReturn(Optional.of(patientEntityStub)); 
 		
-		PatientDto result = patientService.updatePatient(id, expectedPatientDto);
+		MaplicacionDto result = patientService.updatePatient(id, expectedPatientDto);
 		
 		patientService.deletePatient(id);
 
