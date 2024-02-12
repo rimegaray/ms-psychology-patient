@@ -2,14 +2,14 @@ package com.kajucode.patient.controller.convert;
 
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
-import com.kajucode.patient.service.dto.MaplicacionDto;
+import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ControllerConverter {
-	public MaplicacionDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {
-        return MaplicacionDto.builder().fullName(patientUpdateRequest.getFullName())
+	public PatientDto convertPatientUpdatRequestToPatientDto (PatientUpdateRequest patientUpdateRequest) {
+        return PatientDto.builder().fullName(patientUpdateRequest.getFullName())
 				        			.dni(patientUpdateRequest.getDni())
 				        			.age(patientUpdateRequest.getAge())
 				        			.contactNumber(patientUpdateRequest.getContactNumber())
@@ -22,17 +22,17 @@ public class ControllerConverter {
 				        			.build();
     }
 	
-	public PatientResponse convertPatientDtoToPatientResponse (MaplicacionDto maplicacionDto) {
-    	return PatientResponse.builder().fullName(maplicacionDto.getFullName())
-										.dni(maplicacionDto.getDni())
-										.age(maplicacionDto.getAge())
-										.contactNumber(maplicacionDto.getContactNumber())
-										.address(maplicacionDto.getAddress())
-										.email(maplicacionDto.getEmail())
-										.occupation(maplicacionDto.getOccupation())
-										.dateOfAdmission(maplicacionDto.getDateOfAdmission())
-										.lifeStory(maplicacionDto.getLifeStory())
-										.observations(maplicacionDto.getObservations())
+	public PatientResponse convertPatientDtoToPatientResponse (PatientDto patientDto) {
+    	return PatientResponse.builder().fullName(patientDto.getFullName())
+										.dni(patientDto.getDni())
+										.age(patientDto.getAge())
+										.contactNumber(patientDto.getContactNumber())
+										.address(patientDto.getAddress())
+										.email(patientDto.getEmail())
+										.occupation(patientDto.getOccupation())
+										.dateOfAdmission(patientDto.getDateOfAdmission())
+										.lifeStory(patientDto.getLifeStory())
+										.observations(patientDto.getObservations())
 										.build();
 
     }

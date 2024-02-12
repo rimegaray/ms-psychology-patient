@@ -26,7 +26,7 @@ import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
 import com.kajucode.patient.service.PatientService;
-import com.kajucode.patient.service.dto.MaplicacionDto;
+import com.kajucode.patient.service.dto.PatientDto;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientControllerTest {
@@ -59,7 +59,7 @@ public class PatientControllerTest {
 	                .observations("Esta locuaz")
 	                .build();
 	        
-	        MaplicacionDto patientDtoStub = MaplicacionDto.builder()
+	        PatientDto patientDtoStub = PatientDto.builder()
 	                .fullName("Yeremi")
 	                .dni(76351126)
 	                .age(17)
@@ -108,7 +108,7 @@ public class PatientControllerTest {
                 .observations("Esta locuaz")
                 .build();
         
-        MaplicacionDto patientDtoStub = MaplicacionDto.builder()
+        PatientDto patientDtoStub = PatientDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -174,7 +174,7 @@ public class PatientControllerTest {
         
    
         
-        MaplicacionDto patientDtoStub = MaplicacionDto.builder()
+        PatientDto patientDtoStub = PatientDto.builder()
                 .fullName("Yeremi")
                 .dni(76351126)
                 .age(17)
@@ -249,7 +249,7 @@ public class PatientControllerTest {
                 .observations("Esta lokazo")
                 .build();
     	
-    	MaplicacionDto stubPatientDto1 = MaplicacionDto.builder().fullName(("Yeremi"))
+    	PatientDto stubPatientDto1 = PatientDto.builder().fullName(("Yeremi"))
 				.dni(76351126)
 				.age(17)
 				.contactNumber(912923412)
@@ -261,7 +261,7 @@ public class PatientControllerTest {
 				.observations("Esta locuaz")
 				.build();
 		
-    	MaplicacionDto stubPatientDto2 = MaplicacionDto.builder().fullName(("Juancho"))
+    	PatientDto stubPatientDto2 = PatientDto.builder().fullName(("Juancho"))
 				.dni(87654321)
 				.age(28)
 				.contactNumber(987654321)
@@ -274,7 +274,7 @@ public class PatientControllerTest {
 				.build();
 		
 		
-		List<MaplicacionDto> stubPatientDtos = Arrays.asList(stubPatientDto1, stubPatientDto2);
+		List<PatientDto> stubPatientDtos = Arrays.asList(stubPatientDto1, stubPatientDto2);
 		List<PatientResponse> patientResponses = Arrays.asList(patientResponse1, patientResponse2);
 		
 		when(patientServiceMock.getAll()).thenReturn(stubPatientDtos);

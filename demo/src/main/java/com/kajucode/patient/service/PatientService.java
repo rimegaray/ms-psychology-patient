@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.kajucode.patient.repository.dao.PatientDao;
 import com.kajucode.patient.repository.entity.PsychologistEntity;
 import com.kajucode.patient.service.convert.ServiceConverter;
-import com.kajucode.patient.service.dto.MaplicacionDto;
+import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,37 +20,37 @@ public class PatientService implements PatientServiceInterface{
 
     private final PatientDao patientDao;
 
-    public MaplicacionDto addPatient (MaplicacionDto maplicacionDto) {
-        PsychologistEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(maplicacionDto));
+    public PatientDto addPatient (PatientDto patientDto) {
+        PsychologistEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(patientDto));
         return ServiceConverter.convertPatientEntityToDtoPatient(patientResult);
     }
-    public List<MaplicacionDto> getAll() {
+    public List<PatientDto> getAll() {
         List<PsychologistEntity> psychologistEntities = patientDao.findAll();
         return psychologistEntities.stream()
                 .map(ServiceConverter::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
     
-    public MaplicacionDto getPatientById(int patientId) {
+    public PatientDto getPatientById(int patientId) {
     	PsychologistEntity existingPatient = patientDao.findById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
 		return ServiceConverter.convertPatientEntityToDtoPatient(existingPatient); 
     }
     
-    public MaplicacionDto updatePatient(int patientId, MaplicacionDto maplicacionDto) {
+    public PatientDto updatePatient(int patientId, PatientDto patientDto) {
     	PsychologistEntity existingPatient = patientDao.findById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
     	
-        existingPatient.setFullName(maplicacionDto.getFullName());
-        existingPatient.setDni(maplicacionDto.getDni());
-        existingPatient.setAge(maplicacionDto.getAge()); 
-        existingPatient.setContactNumber(maplicacionDto.getContactNumber());
-        existingPatient.setAddress(maplicacionDto.getAddress());
-        existingPatient.setEmail(maplicacionDto.getEmail());
-        existingPatient.setOccupation(maplicacionDto.getOccupation());
-        existingPatient.setDateOfAdmission(maplicacionDto.getDateOfAdmission());
-        existingPatient.setLifeStory(maplicacionDto.getLifeStory());
-        existingPatient.setObservations(maplicacionDto.getObservations()); 
+        existingPatient.setFullName(patientDto.getFullName());
+        existingPatient.setDni(patientDto.getDni());
+        existingPatient.setAge(patientDto.getAge()); 
+        existingPatient.setContactNumber(patientDto.getContactNumber());
+        existingPatient.setAddress(patientDto.getAddress());
+        existingPatient.setEmail(patientDto.getEmail());
+        existingPatient.setOccupation(patientDto.getOccupation());
+        existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
+        existingPatient.setLifeStory(patientDto.getLifeStory());
+        existingPatient.setObservations(patientDto.getObservations()); 
      
         return ServiceConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
     }

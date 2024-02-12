@@ -1,11 +1,9 @@
 package com.kajucode.patient.controller;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,14 +18,10 @@ import com.kajucode.patient.controller.convert.ControllerConverter;
 import com.kajucode.patient.controller.dto.PatientCreationRequest;
 import com.kajucode.patient.controller.dto.PatientResponse;
 import com.kajucode.patient.controller.dto.PatientUpdateRequest;
-import com.kajucode.patient.repository.entity.PsychologistEntity;
-import com.kajucode.patient.service.PatientService;
 import com.kajucode.patient.service.PatientServiceInterface;
-import com.kajucode.patient.service.convert.ServiceConverter;
-import com.kajucode.patient.service.dto.MaplicacionDto;
+import com.kajucode.patient.service.dto.PatientDto;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
@@ -39,7 +33,7 @@ public class PatientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PatientResponse addPatient (@RequestBody PatientCreationRequest patientRequest) {
-    	MaplicacionDto newPatient = MaplicacionDto.builder().fullName(patientRequest.getFullName())
+    	PatientDto newPatient = PatientDto.builder().fullName(patientRequest.getFullName())
 													.dni(patientRequest.getDni())
 													.age(patientRequest.getAge())
 													.contactNumber(patientRequest.getContactNumber())
@@ -59,8 +53,8 @@ public class PatientController {
  
     @PutMapping("/{id}")
     public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
-    	MaplicacionDto maplicacionDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
-    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.updatePatient(id, maplicacionDto));
+    	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
+    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.updatePatient(id, patientDto));
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -69,7 +63,7 @@ public class PatientController {
     }
     @GetMapping
     public List<PatientResponse> getAll() {
-        List<MaplicacionDto> patients = patientServiceInterface.getAll();
+        List<PatientDto> patients = patientServiceInterface.getAll();
         return patients.stream()
                 .map(ControllerConverter::convertPatientDtoToPatientResponse)
                 .collect(Collectors.toList());

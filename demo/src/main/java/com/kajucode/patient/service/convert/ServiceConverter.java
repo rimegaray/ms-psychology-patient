@@ -1,14 +1,14 @@
 package com.kajucode.patient.service.convert;
 
 import com.kajucode.patient.repository.entity.PsychologistEntity;
-import com.kajucode.patient.service.dto.MaplicacionDto;
+import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ServiceConverter {
-	public MaplicacionDto convertPatientEntityToDtoPatient (PsychologistEntity psychologistEntity) {
-        return MaplicacionDto.builder().fullName(psychologistEntity.getFullName())
+	public PatientDto convertPatientEntityToDtoPatient (PsychologistEntity psychologistEntity) {
+        return PatientDto.builder().fullName(psychologistEntity.getFullName())
 									.dni(psychologistEntity.getDni())
 									.age(psychologistEntity.getAge())
 									.contactNumber(psychologistEntity.getContactNumber())
@@ -20,18 +20,18 @@ public class ServiceConverter {
 									.observations(psychologistEntity.getObservations())
 									.build();
     }
-    public PsychologistEntity convertPatientDtoToEntityPatient (MaplicacionDto maplicacionDto) {
+    public PsychologistEntity convertPatientDtoToEntityPatient (PatientDto patientDto) {
         PsychologistEntity psychologistEntity = new PsychologistEntity();
-        psychologistEntity.setFullName(maplicacionDto.getFullName());
-        psychologistEntity.setDni(maplicacionDto.getDni());
-        psychologistEntity.setAge(maplicacionDto.getAge());
-        psychologistEntity.setContactNumber(maplicacionDto.getContactNumber());
-        psychologistEntity.setAddress(maplicacionDto.getAddress());
-        psychologistEntity.setEmail(maplicacionDto.getEmail());
-        psychologistEntity.setOccupation(maplicacionDto.getOccupation());
-        psychologistEntity.setDateOfAdmission(maplicacionDto.getDateOfAdmission());
-        psychologistEntity.setLifeStory(maplicacionDto.getLifeStory());
-        psychologistEntity.setObservations(maplicacionDto.getObservations());
+        psychologistEntity.setFullName(patientDto.getFullName());
+        psychologistEntity.setDni(patientDto.getDni());
+        psychologistEntity.setAge(patientDto.getAge());
+        psychologistEntity.setContactNumber(patientDto.getContactNumber());
+        psychologistEntity.setAddress(patientDto.getAddress());
+        psychologistEntity.setEmail(patientDto.getEmail());
+        psychologistEntity.setOccupation(patientDto.getOccupation());
+        psychologistEntity.setDateOfAdmission(patientDto.getDateOfAdmission());
+        psychologistEntity.setLifeStory(patientDto.getLifeStory());
+        psychologistEntity.setObservations(patientDto.getObservations());
         return psychologistEntity;
     }
 }
