@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.kajucode.patient.repository.dao.PatientDao;
-import com.kajucode.patient.repository.entity.PsychologistEntity;
+import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
@@ -21,24 +21,24 @@ public class PatientService implements PatientServiceInterface{
     private final PatientDao patientDao;
 
     public PatientDto addPatient (PatientDto patientDto) {
-        PsychologistEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(patientDto));
+        PatientEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(patientDto));
         return ServiceConverter.convertPatientEntityToDtoPatient(patientResult);
     }
     public List<PatientDto> getAll() {
-        List<PsychologistEntity> psychologistEntities = patientDao.findAll();
-        return psychologistEntities.stream()
+        List<PatientEntity> patientEntities = patientDao.findAll();
+        return patientEntities.stream()
                 .map(ServiceConverter::convertPatientEntityToDtoPatient)
                 .collect(Collectors.toList());
     }
     
     public PatientDto getPatientById(int patientId) {
-    	PsychologistEntity existingPatient = patientDao.findById(patientId)
+    	PatientEntity existingPatient = patientDao.findById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
 		return ServiceConverter.convertPatientEntityToDtoPatient(existingPatient); 
     }
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
-    	PsychologistEntity existingPatient = patientDao.findById(patientId)
+    	PatientEntity existingPatient = patientDao.findById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
     	
         existingPatient.setFullName(patientDto.getFullName());

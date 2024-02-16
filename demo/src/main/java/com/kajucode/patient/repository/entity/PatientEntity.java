@@ -18,7 +18,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "patient")
-public class PsychologistEntity {
+public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_patient")
