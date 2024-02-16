@@ -1,10 +1,9 @@
 package com.kajucode.patient.service;
 
-import lombok.RequiredArgsConstructor;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,12 +12,11 @@ import com.kajucode.patient.repository.entity.PatientEntity;
 import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class PatientService {
+public class PatientService implements PatientServiceInterface{
 
     private final PatientDao patientDao;
 
@@ -40,8 +38,9 @@ public class PatientService {
     }
     
     public PatientDto updatePatient(int patientId, PatientDto patientDto) {
-    	PatientEntity existingPatient = ServiceConverter.convertPatientDtoToEntityPatient(getPatientById(patientId));
-        
+    	PatientEntity existingPatient = patientDao.findById(patientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+    	
         existingPatient.setFullName(patientDto.getFullName());
         existingPatient.setDni(patientDto.getDni());
         existingPatient.setAge(patientDto.getAge()); 
