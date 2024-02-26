@@ -13,49 +13,61 @@ import com.kajucode.patient.service.convert.ServiceConverter;
 import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
-public class PatientService implements PatientServiceInterface{
+public class PatientService implements PatientServiceInterface {
 
-    private final PatientDao patientDao;
+	private final PatientDao patientDao;
 
-    public PatientDto addPatient (PatientDto patientDto) {
-        PatientEntity patientResult = patientDao.save(ServiceConverter.convertPatientDtoToEntityPatient(patientDto));
-        return ServiceConverter.convertPatientEntityToDtoPatient(patientResult);
-    }
-    public List<PatientDto> getAll() {
-        List<PatientEntity> patientEntities = patientDao.findAll();
-        return patientEntities.stream()
-                .map(ServiceConverter::convertPatientEntityToDtoPatient)
-                .collect(Collectors.toList());
-    }
-    
-    public PatientDto getPatientById(int patientId) {
-    	PatientEntity existingPatient = patientDao.findById(patientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
-		return ServiceConverter.convertPatientEntityToDtoPatient(existingPatient); 
-    }
-    
-    public PatientDto updatePatient(int patientId, PatientDto patientDto) {
-    	PatientEntity existingPatient = patientDao.findById(patientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
-    	
-        existingPatient.setFullName(patientDto.getFullName());
-        existingPatient.setDni(patientDto.getDni());
-        existingPatient.setAge(patientDto.getAge()); 
-        existingPatient.setContactNumber(patientDto.getContactNumber());
-        existingPatient.setAddress(patientDto.getAddress());
-        existingPatient.setEmail(patientDto.getEmail());
-        existingPatient.setOccupation(patientDto.getOccupation());
-        existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
-        existingPatient.setLifeStory(patientDto.getLifeStory());
-        existingPatient.setObservations(patientDto.getObservations()); 
-     
-        return ServiceConverter.convertPatientEntityToDtoPatient(patientDao.save(existingPatient));
-    }
+	@Override
+	public Mono<PatientDto> addPatient(PatientDto patientDto) {
+		return Mono.just(patientDto).map(dto -> ServiceConverter.convertPatientDtoToEntityPatient(dto))
+				.flatMap(patientEntity -> Mono.just(patientDao.save(patientEntity)))
+				.map(savedPatient -> ServiceConverter.convertPatientEntityToDtoPatient(savedPatient));
+	}
 
-    public void deletePatient (int idPatient) {
-        patientDao.deleteById(idPatient);
+	@Override
+	public Flux<PatientDto> getAll() {
+		return Flux.defer(() -> Flux.fromIterable(patientDao.findAll()))
+				.map(ServiceConverter::convertPatientEntityToDtoPatient);
+	}
+
+	@Override
+	public Mono<PatientDto> getPatientById(int patientId) {
+		return Mono.fromSupplier(() -> {
+			PatientEntity existingPatient = patientDao.findById(patientId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+			return ServiceConverter.convertPatientEntityToDtoPatient(existingPatient);
+		});
+	}
+
+	@Override
+	public Mono<PatientDto> updatePatient(int patientId, PatientDto patientDto) {
+		return Mono.fromSupplier(() -> {
+			PatientEntity existingPatient = patientDao.findById(patientId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+
+			existingPatient.setFullName(patientDto.getFullName());
+			existingPatient.setDni(patientDto.getDni());
+			existingPatient.setAge(patientDto.getAge());
+			existingPatient.setContactNumber(patientDto.getContactNumber());
+			existingPatient.setAddress(patientDto.getAddress());
+			existingPatient.setEmail(patientDto.getEmail());
+			existingPatient.setOccupation(patientDto.getOccupation());
+			existingPatient.setDateOfAdmission(patientDto.getDateOfAdmission());
+			existingPatient.setLifeStory(patientDto.getLifeStory());
+			existingPatient.setObservations(patientDto.getObservations());
+
+			PatientEntity updatedPatient = patientDao.save(existingPatient);
+			return ServiceConverter.convertPatientEntityToDtoPatient(updatedPatient);
+		});
+	}
+
+	@Override
+    public Mono<Void> deletePatient(int idPatient) {
+        return Mono.fromRunnable(() -> patientDao.deleteById(idPatient));
     }
 }

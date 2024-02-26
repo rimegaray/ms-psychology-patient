@@ -22,6 +22,8 @@ import com.kajucode.patient.service.PatientServiceInterface;
 import com.kajucode.patient.service.dto.PatientDto;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 @RequiredArgsConstructor
@@ -32,42 +34,50 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PatientResponse addPatient (@RequestBody PatientCreationRequest patientRequest) {
-    	PatientDto newPatient = PatientDto.builder().fullName(patientRequest.getFullName())
-													.dni(patientRequest.getDni())
-													.age(patientRequest.getAge())
-													.contactNumber(patientRequest.getContactNumber())
-													.address(patientRequest.getAddress())
-													.email(patientRequest.getEmail())
-													.occupation(patientRequest.getOccupation())
-													.dateOfAdmission(patientRequest.getDateOfAdmission())
-													.lifeStory(patientRequest.getLifeStory())
-													.observations(patientRequest.getObservations())
-													.build();
-    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.addPatient(newPatient));
-    } 
+    public Mono<PatientResponse> addPatient (@RequestBody PatientCreationRequest patientRequest) {
+        PatientDto newPatient = PatientDto.builder()
+                .fullName(patientRequest.getFullName())
+                .dni(patientRequest.getDni())
+                .age(patientRequest.getAge())
+                .contactNumber(patientRequest.getContactNumber())
+                .address(patientRequest.getAddress())
+                .email(patientRequest.getEmail())
+                .occupation(patientRequest.getOccupation())
+                .dateOfAdmission(patientRequest.getDateOfAdmission())
+                .lifeStory(patientRequest.getLifeStory())
+                .observations(patientRequest.getObservations())
+                .build();
+
+        return patientServiceInterface.addPatient(newPatient)
+                .map(ControllerConverter::convertPatientDtoToPatientResponse);
+    }
+
     @GetMapping("/{id}")
-    public PatientResponse getPatientById(@PathVariable int id) {
-        return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.getPatientById(id));
+    public Mono<PatientResponse> getPatientById(@PathVariable int id) {
+        return patientServiceInterface.getPatientById(id)
+                .map(ControllerConverter::convertPatientDtoToPatientResponse);
     }
- 
+
     @PutMapping("/{id}")
-    public PatientResponse update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
-    	PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
-    	return ControllerConverter.convertPatientDtoToPatientResponse(patientServiceInterface.updatePatient(id, patientDto));
+    public Mono<PatientResponse> update(@PathVariable int id, @RequestBody PatientUpdateRequest patientUpdateRequest) {
+        PatientDto patientDto = ControllerConverter.convertPatientUpdatRequestToPatientDto(patientUpdateRequest);
+        return patientServiceInterface.updatePatient(id, patientDto)
+                .map(ControllerConverter::convertPatientDtoToPatientResponse);
     }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
-        patientServiceInterface.deletePatient(id);
+    public Mono<Void> delete(@PathVariable int id) {
+        return patientServiceInterface.deletePatient(id);
     }
+
+    
     @GetMapping
-    public List<PatientResponse> getAll() {
-        List<PatientDto> patients = patientServiceInterface.getAll();
-        return patients.stream()
-                .map(ControllerConverter::convertPatientDtoToPatientResponse)
-                .collect(Collectors.toList());
-    } 
+    public Flux<PatientResponse> getAll() {
+        return patientServiceInterface.getAll()
+                .map(ControllerConverter::convertPatientDtoToPatientResponse);
+    }
+
     
      
 

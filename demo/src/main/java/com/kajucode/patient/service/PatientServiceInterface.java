@@ -1,13 +1,14 @@
 package com.kajucode.patient.service;
 
-import java.util.List;
-
 import com.kajucode.patient.service.dto.PatientDto;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface PatientServiceInterface {
-	PatientDto addPatient(PatientDto patientDto);
-	List<PatientDto> getAll();
-	PatientDto getPatientById(int patientId);
-	PatientDto updatePatient(int patientId, PatientDto patientDto);
-	void deletePatient (int idPatient);
+	Mono<PatientDto> addPatient(PatientDto patientDto);
+	Flux<PatientDto> getAll();
+	Mono<PatientDto> getPatientById(int patientId);
+	Mono<PatientDto> updatePatient(int patientId, PatientDto patientDto);
+	Mono<Void> deletePatient (int idPatient);
 }
